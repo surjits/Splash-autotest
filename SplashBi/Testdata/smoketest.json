@@ -1,0 +1,26 @@
+{
+	"createMultipleFilter": [
+		{
+			
+			"Run": "No",
+			"bussinessApp": "autoBusinessApplication",
+			"dbconnector": "automationConnection",
+			"Tablename": "Ms_Products",
+			"Filter1":"Movie Name",
+			"Filter2":"Product Type",
+			"text1":"MOVIE_NAME = 'The Dark Tower'",
+			"text2":"PRODUCT_TYPE = 'Movie'"
+			
+		}
+	]
+	
+	"createDomainLOV": [
+	    {
+	        "Run": "Yes",
+			"lovType": "Query",
+			"lovQuery": "SELECT CITY,REGION FROM MS_STORES"
+	     
+	    }
+	    
+	]
+}

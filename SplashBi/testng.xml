@@ -1,0 +1,15 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+  
+<suite name="TestSuite">
+
+<listeners>
+        <listener class-name="com.splashbi.listener.SetAnnotation"/>
+        <listener class-name="com.splashbi.report.EmailableCustomReport"/>
+</listeners>
+<test name="Smoke_Test">
+  <classes>
+     <class name="com.splashbi.smoketest.DomainModule"/>
+    <!--<class name="com.splashbi.smoketest.CreateDataPoint"/>-->
+  </classes>
+  </test>
+</suite>
