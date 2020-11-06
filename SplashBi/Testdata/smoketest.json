@@ -12,13 +12,21 @@
 			"text2":"PRODUCT_TYPE = 'Movie'"
 			
 		}
-	]
+	],
 	
 	"createDomainLOV": [
 	    {
 	        "Run": "Yes",
 			"lovType": "Query",
 			"lovQuery": "SELECT CITY,REGION FROM MS_STORES"
+	     
+	    }
+	    
+	],
+	"checkConnectionStatus": [
+	    {
+	        "Run": "Yes"
+
 	     
 	    }
 	    

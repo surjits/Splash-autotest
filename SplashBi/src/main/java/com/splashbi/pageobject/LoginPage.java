@@ -49,6 +49,7 @@ public class LoginPage extends BasePage {
 			openUrl(Utility.getValueFromPropertyFile(Constant.CONFIG_PATH,"url"));
 			String username = Utility.getValueFromPropertyFile(Constant.CONFIG_PATH,"user");
 			String password = Utility.getValueFromPropertyFile(Constant.CONFIG_PATH,"password");
+			System.out.println("going to login");
 			inputText(USER_NAME,username);
 			inputText(PASSWORD,password);
 			clickButton(LOGIN);

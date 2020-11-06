@@ -22,14 +22,18 @@ public class HomePage  extends BasePage {
 		this.setExtentTest(test);
 		
 	}
-    
+    public void navigateToAdminPage() throws Exception {
+		waitAndClick(ADMINISTRATOR);
+		waitForInvisibilityOfLoader();
+		test.log(LogStatus.INFO, "Navigated to Admin Page: " );
+	}
     public void navigateToDomainPage() {
     	System.out.println("navigateToDomainPage");
     	logger.info("Entered navigateToDomainPage method" );
     	try {
     		waitAndClick(DOMAIN);
 	    	waitForInvisibilityOfLoader();
-	    	test.log(LogStatus.INFO, "Navogated to domain Page: " );
+	    	test.log(LogStatus.INFO, "Navigated to domain Page: " );
     	}catch(Exception e) {
     		
     	}

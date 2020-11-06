@@ -7,7 +7,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.time.Duration;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
@@ -210,6 +209,8 @@ public class BasePage <T extends InitPageElement> {
 			return false;
 		}
 	}
+
+
 	
 	public String getTextValue(T element,String ...val) throws Exception {
 		if(val.length > 0) {

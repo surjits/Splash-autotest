@@ -4,6 +4,7 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.util.concurrent.TimeUnit;
 
+import com.splashbi.pageobject.*;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.openqa.selenium.WebDriver;
@@ -22,10 +23,6 @@ import org.testng.annotations.DataProvider;
 import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.ExtentTest;
 import com.relevantcodes.extentreports.LogStatus;
-import com.splashbi.pageobject.DomainPage;
-import com.splashbi.pageobject.HomePage;
-import com.splashbi.pageobject.LoginPage;
-import com.splashbi.pageobject.ReportPage;
 import com.splashbi.report.ExtentReport;
 import com.splashbi.utility.Constant;
 import com.splashbi.utility.ExcelUtility;
@@ -41,16 +38,18 @@ public static WebDriver driver;
 	public static Logger logger = Logger.getLogger(TestSetup.class);
 	public static ExcelUtility xl;
 	public static String sheetName = "TestData";
-	ExtentReport ereport = new ExtentReport();
+	ExtentReport extentreport = new ExtentReport();
 	public static LoginPage login=null;
 	public static HomePage home = null;
 	public static DomainPage domain = null;
 	public static ReportPage report = null;
+	public static AdminPage admin = null;
+	public static ConnectorsPage connector = null;
 	
 	public static WebDriver initDriver() {
-		//WebDriverManager.chromedriver().setup();
+		WebDriverManager.chromedriver().setup();
 		try {
-		System.setProperty("webdriver.chrome.driver",Utility.getValueFromPropertyFile(Constant.CONFIG_PATH, "chromedriver_path"));
+		//System.setProperty("webdriver.chrome.driver",Utility.getValueFromPropertyFile(Constant.CONFIG_PATH, "chromedriver_path"));
 		if(Utility.getValueFromPropertyFile(Constant.CONFIG_PATH, "run_mode").equalsIgnoreCase("headless"))
 		{
 			driver = runInHeadLess();
@@ -72,6 +71,8 @@ public static WebDriver driver;
 		home = new HomePage(driver);
 		domain = new DomainPage(driver);
 		report = new ReportPage(driver);
+		admin = new AdminPage(driver);
+		connector = new ConnectorsPage(driver);
 	}
 	public static WebDriver runInHeadLess() {
 		ChromeOptions options = new ChromeOptions();
@@ -86,8 +87,8 @@ public static WebDriver driver;
 		xl = new ExcelUtility(Constant.TEST_DATA);
 		System.out.println("Kiiling chromedriver.exe");
 		Runtime.getRuntime().exec("TASKKILL /IM chromedriver.exe /F");
-		extent = new ExtentReports (System.getProperty("user.dir") +"/test-output/STMExtentReport.html", true);
-		//extent = ereport.getInstance("Smoke Test");
+		//extent = new ExtentReports (System.getProperty("user.dir") +"/test-output/STMExtentReport.html", true);
+		extent = extentreport.getInstance("SanityData");
 		String log4j = Constant.LOG4J_PATH;
 		PropertyConfigurator.configure(log4j);
 		initDriver();
@@ -134,6 +135,8 @@ public static WebDriver driver;
 	public void setChildTest(ExtentTest childtest ) {
 		System.out.println("in setChildTest");
 		login.setTest(childtest);
+		connector.setTest(childtest);
+		connector.setTest(childtest);
 		home.setTest(childtest);
 		domain.setTest(childtest);
 		report.setTest(childtest);
@@ -167,10 +170,8 @@ public static WebDriver driver;
 	}
 	
 	
-/*
 	@DataProvider(name="LoadData")
 	public static Object[][] tableFilters(Method method) {
 		return Utility.getData(new File(Constant.TEST_DATA_JSON), method.getName());
 	}
-*/
 }
