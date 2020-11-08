@@ -25,10 +25,28 @@
 	],
 	"checkConnectionStatus": [
 	    {
-	        "Run": "Yes"
-
+	        "Run": "Yes",
+            "connector": "oracleEBS"
 	     
 	    }
 	    
+	],
+	"createDBConnector": [
+		{
+			"Run": "Yes",
+			"connector_type": "Oracle",
+			"system_type": "Oracle E-Business Suite",
+			"connection_type": "Manual",
+			"hostname": "192.168.8.233",
+			"sid": "ebs19c",
+			"connection_user": "apps",
+			"connection_password": "apps",
+			"port_number": "1521",
+			"schema_name": "testdb"
+
+		}
+
 	]
+	
+	
 }

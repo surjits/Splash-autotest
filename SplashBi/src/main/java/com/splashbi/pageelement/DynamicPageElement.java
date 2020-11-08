@@ -43,7 +43,16 @@ public enum DynamicPageElement implements InitPageElement {
     SELECT_PROPERTY_COLUMN(getValueFromPropFile("select_property_column")),
     DRAG_COLUMN(getValueFromPropFile("drag_column")),
     VERIFY_REPORT_CREATION(getValueFromPropFile("verify_report_creation")),
-	EXPAND(getValueFromPropFile("expandLink"));
+	EXPAND(getValueFromPropFile("expandLink")),
+
+    //*********************************CONNECTOR PAGE****************************************
+    DB_CONNECTOR_TYPE(getValueFromPropFile("db_connector_type")),
+    CONNECTOR(getValueFromPropFile("connector")),
+    CONNECTOR_TAB(getValueFromPropFile("connector_tab")),
+    SYSTEM_TYPE(getValueFromPropFile("system_type")),
+    DB_CONNECTION_TYPE(getValueFromPropFile("db_connector_type")),
+    CONNECTION_TYPE(getValueFromPropFile("connection_type"));
+
 	
 	private String loc;
 	public String expression;
@@ -67,7 +76,7 @@ public enum DynamicPageElement implements InitPageElement {
     }
 	 @Override
 	    public By getBy() {
-			return ElementLocator.getLocator(loc);
+			return null;
 		}
 	 @Override
 	 public By getDynamicBy(String val) {

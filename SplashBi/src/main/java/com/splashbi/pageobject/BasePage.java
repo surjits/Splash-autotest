@@ -1,7 +1,5 @@
 package com.splashbi.pageobject;
 
-import static com.splashbi.pageelement.DomainPageElement.BUSINESS_APP_LIST;
-
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -370,6 +368,17 @@ public class BasePage <T extends InitPageElement> {
 			test.log(LogStatus.FAIL, "Could not click element" + test.addScreenCapture(addScreenshot()));
 		}
 		
+	}
+	public boolean isElementDisplayed(T element){
+		boolean displayed = false;
+		try{
+			if (getWebElement(element).isDisplayed()){
+				displayed = true;
+			}
+		}catch(Exception e){
+			logger.error("Error in click:" + e.getMessage());
+		}
+		return displayed;
 	}
 	
 	public boolean isAlertPresent() {

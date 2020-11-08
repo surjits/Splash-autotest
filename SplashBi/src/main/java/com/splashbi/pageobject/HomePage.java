@@ -56,10 +56,10 @@ public class HomePage  extends BasePage {
     	logger.info("Entering method verifyHomePage()");
     	boolean present = false;
     	try {
-    		
+    		waitForVisibilityOfElement(HOME);
 	    	if(isElementDisplayed(HOME)) {
 	    		present = true;
-	    		test.log(LogStatus.PASS, "Login Successfull and Entered Home Page:"+test.addScreenCapture(addScreenshot()));
+	    		//test.log(LogStatus.PASS, "Login Successfull and Entered Home Page:"+test.addScreenCapture(addScreenshot()));
 	    	}
     	}catch(Exception e) {
     		logger.error("Could not land in home page:"+e.getMessage());
