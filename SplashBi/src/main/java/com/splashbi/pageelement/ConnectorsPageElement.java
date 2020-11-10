@@ -15,6 +15,9 @@ public enum ConnectorsPageElement implements InitPageElement{
     ORACLE_EBS_INFO(getValueFromPropFile("oracle_ebs_info")),
     TEST_CONNECTOR(getValueFromPropFile("test_connector")),
     CONNECTOR_VALIDATE(getValueFromPropFile("connector_success_popup")),
+    INFO_CONNECTOR(getValueFromPropFile("info_connector")),
+    EDIT_CONNECTOR(getValueFromPropFile("edit_connector")),
+    CREATED_CONNECTOR_IMAGE(getValueFromPropFile("created_connector_image")),
 
     /*********************Buttons in Create Connector*******************************/
     CONNECTOR_NAME(getValueFromPropFile("connector_name")),

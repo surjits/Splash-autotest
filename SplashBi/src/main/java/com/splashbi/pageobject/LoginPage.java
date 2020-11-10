@@ -53,12 +53,13 @@ public class LoginPage extends BasePage {
 			inputText(USER_NAME,username);
 			inputText(PASSWORD,password);
 			clickButton(LOGIN);
-			if(verifyElementPresent(WARNING)) {
+			if(isElementDisplayed(WARNING)) {
 				test.log(LogStatus.FAIL, "Snapshot Below: " + test.addScreenCapture(addScreenshot()));
 			}else {
 				test.log(LogStatus.PASS, "No Error warning in Login");
 				
 			}
+			waitForInvisibilityOfLoader();
 		}catch(Exception e) {
 			//logger.error("Error in input text:" + e.fillInStackTrace());
 			test.log(LogStatus.FAIL, "Login Failed" );

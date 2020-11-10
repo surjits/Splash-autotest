@@ -51,7 +51,14 @@ public enum DynamicPageElement implements InitPageElement {
     CONNECTOR_TAB(getValueFromPropFile("connector_tab")),
     SYSTEM_TYPE(getValueFromPropFile("system_type")),
     DB_CONNECTION_TYPE(getValueFromPropFile("db_connector_type")),
-    CONNECTION_TYPE(getValueFromPropFile("connection_type"));
+    CONNECTION_TYPE(getValueFromPropFile("connection_type")),
+    //*********************************USERS PAGE****************************************
+    USER_SEARCHED(getValueFromPropFile("user_searched")),
+    USER_CREATE_PRIVILEGE(getValueFromPropFile("user_create_privilege")),
+    USER_COPY_PRIVILEGE(getValueFromPropFile("user_copy_privilege")),
+    USER_SHARE_PRIVILEGE(getValueFromPropFile("user_share_privilege")),
+    USER_DISTRIBUTION_PRIVILEGE(getValueFromPropFile("user_copy_privilege"));
+
 
 	
 	private String loc;

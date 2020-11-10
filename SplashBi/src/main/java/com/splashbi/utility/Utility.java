@@ -9,12 +9,10 @@ import java.util.Hashtable;
 import java.util.Properties;
 import java.util.Random;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonIOException;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
+import com.google.gson.*;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 public class Utility {
 public static String getValueFromPropertyFile(String path, String key) {
@@ -39,7 +37,7 @@ public static String getRandomNumber(String prefix)
 {
 	Random random = new Random();
 	String staticNum = prefix;
-	int randomNum = random.nextInt(1000000) + 1000000;
+	int randomNum = random.nextInt(899) + 100;
 	String randomValue = Integer.toString(randomNum);
 	String randomNumber = staticNum+randomValue;
 	return randomNumber;
@@ -98,6 +96,37 @@ public static Object[][] getData(File jsonfilepath, String testCaseName){
 	 System.out.println("===========================================================================================================================");
 	return data;		
 }
+public static String getValueForKey(File jsonfilepath, String testCaseName, String key){
+	String value = null;
+	try {
+		Gson gson = new GsonBuilder().create();
+		JsonObject job = null;
+		try {
+			job = gson.fromJson(new FileReader(jsonfilepath), JsonObject.class);
+		} catch (JsonSyntaxException e) {
+			e.printStackTrace();
+		} catch (JsonIOException e) {
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		JsonElement jsonElement = job.getAsJsonArray(testCaseName);
+		JsonArray js = jsonElement.getAsJsonArray();
+
+
+		JsonObject rootObject = js.get(0).getAsJsonObject();
+		value = rootObject.get(key).getAsString();
+		//	value = rowdata.get("Run").getAsString();
+
+
+	}catch(Exception e){
+		System.out.println("Failed");
+		e.printStackTrace();
+	}
+
+	return value;
+}
 public Object[][] testDataSet() {
 	Hashtable<String, String> table=null;
 	return getData(new File("F://Automation//SplashBi//Testdata//smoketest.json"), "TC_DOM_TABLE_FILTERS_014");
@@ -105,7 +134,8 @@ public Object[][] testDataSet() {
 
 public static void main(String args[]) {
 	
-	
+	String val = getValueForKey(new File(Constant.TEST_DATA_JSON),"createDBConnector","Run");
+	System.out.println("value is:"+val);
 	
 }
   

@@ -52,14 +52,14 @@ public class BasePage <T extends InitPageElement> {
 		this.log4jprop = Constant.LOG4J_PATH;
 		PropertyConfigurator.configure(log4jprop);
 	}
-	
+
 	public BasePage() {
-		
+
 	}
 	public BasePage(ExtentTest test) {
 		this.test = test;
 	}
-	
+
 	public void setExtentTest(ExtentTest test) {
 		this.test=test;
 	}
@@ -71,29 +71,25 @@ public class BasePage <T extends InitPageElement> {
 		this.test = test;
 		actions = new Actions(driver);
 	}
-	
+
 	JavascriptExecutor javascript = ((JavascriptExecutor) driver);
-	
+
 	static Exception handleException(Exception e) {
-        System.err.println("Handling Exception: " + e);
-        return new Exception(e);
-    }
-	public boolean isElementDisplayed(T element,String ...val) throws Exception {
+		System.err.println("Handling Exception: " + e);
+		return new Exception(e);
+	}
+	public boolean isElementDisplayed(T element,String val)  {
+		boolean isDisplayed = false;
 		try {
-			if(val.length >0) {
-			   waitForVisibilityOfElement(element,val[0]);
-			   return verifyElementPresent(element,val[0]);
+			waitForVisibilityOfElement(element,val);
+			if(getWebElement(element,val).isDisplayed()){
+				isDisplayed = true;
 			}
-			else {
-			   waitForVisibilityOfElement(element);
-			   return verifyElementPresent(element);
-			}
-			
 		}catch(Exception e) {
-			logger.error("Element not displayed");
+			logger.error("Element not displayed",e);
 			throw e;
-		
 		}
+		return isDisplayed;
 	}
 	public void openUrl(String url) throws Exception {
 		System.out.println("opening url:"+url);
@@ -105,121 +101,99 @@ public class BasePage <T extends InitPageElement> {
 		catch(Exception e) {
 			throw e;
 		}
-	  
+
 	}
-	//To verify dynamic object
-	
+
 	public void wait(int timeout) throws Exception {
 		try {
 			long milliSeconds = timeout * 1000;
 			Thread.sleep(milliSeconds);
 		}catch(InterruptedException e) {
-		logger.debug(e.getMessage());
+			logger.debug(e.getMessage());
+		}
 	}
+	/***********To get Dynamic element********************/
+	public WebElement getWebElement(T element,String val) {
+		try{
+			return driver.findElement(element.getDynamicBy(val));
+		}catch(NoSuchElementException e) {
+			throw e;
+		}catch(Exception e) {
+			throw e;
+		}
 	}
-	
-	public WebElement getDynamicWebElement(T element,String val) {
-		return driver.findElement(element.getDynamicBy(val));
-	}
-	
+	/***********To get element********************/
 	public WebElement getWebElement(T element) {
 		try {
-		   we = driver.findElement(element.getBy());
+			return driver.findElement(element.getBy());
 		}catch(NoSuchElementException e) {
 			throw e;
 		}catch(Exception e) {
 			throw e;
 		}
-		return we;
 	}
-	
-	public WebElement locateElement(T element,String[] val) {
-		
-		return we;
-	}
-	public WebElement getWebElement(T element,String val)  {
+	public List<WebElement> getWebElementList(T element) {
+		List<WebElement> wl = null;
 		try {
-			if(val.isEmpty()) {
-				we = driver.findElement(element.getBy());
-			}else {
-				we = driver.findElement(element.getDynamicBy(val));
-			}
-		}catch(NoSuchElementException e) {
-			throw e;
-		}catch(TimeoutException e) {
-			throw e;
-		}catch(Exception e) {
-			throw e;
+			wl = driver.findElements(element.getBy());
+		}catch(Exception e){
+			logger.error("List Element not found",e);
 		}
-		return we;
-	}
-	
-	public List<WebElement> getWebElementList(T element,String val) {	
-	    List<WebElement> wl = null;
-	    if(val.isEmpty())
-	    	wl = driver.findElements(element.getBy());
-	    else 
-		    wl = driver.findElements(element.getBy());
 		return wl;
 	}
-	
+
+	public List<WebElement> getWebElementList(T element,String val) {
+		List<WebElement> wl = null;
+		if(val.isEmpty())
+			wl = driver.findElements(element.getBy());
+		else
+			wl = driver.findElements(element.getBy());
+		return wl;
+	}
+
 	public void waitForPageLoad() {
-		
-        ExpectedCondition<Boolean> pageLoadCondition = new
-                ExpectedCondition<Boolean>() {
-                    public Boolean apply(WebDriver driver) {
-                        return ((JavascriptExecutor)driver).executeScript("return document.readyState").equals("complete");
-                    }
-                };
-        
-        wait.until(pageLoadCondition);
-    }
+
+		ExpectedCondition<Boolean> pageLoadCondition = new
+				ExpectedCondition<Boolean>() {
+					public Boolean apply(WebDriver driver) {
+						return ((JavascriptExecutor)driver).executeScript("return document.readyState").equals("complete");
+					}
+				};
+
+		wait.until(pageLoadCondition);
+	}
 	public void selectItemFromUlist(T element, String listitem) {
-		try {	
+		try {
 			WebElement target=getWebElement(element,listitem);
 			target.click();
-			
+
 		}catch(Exception e) {
 			e.printStackTrace();
-			logger.error("Not able to select the desired element from List:"+"  "+e.toString());
+			logger.error("Not able to select the desired element from List:",e);
 		}
 	}
-	
+
 	public boolean isElementPresent(T element,String val) {
 		if(getWebElementList(element,val).size()!=0) {
 			System.out.println("Warning present");
-		   return true;
+			return true;
 		}
 		else {
 			return false;
 		}
 	}
-	
-	public boolean verifyElementPresent(T element,String ...val) {
-		try {
-			if(val.length > 0)
-		       getWebElement(element,val[0]);
-			else
-			   getWebElement(element,"");
-		    return true;
-		}catch(Exception e) {
-		
-			return false;
-		}
+
+	public String getTextValue(T element,String dynamicVal)  {
+		WebElement we = null;
+		waitForVisibilityOfElement(element, dynamicVal);
+		we=getWebElement(element, dynamicVal);
+		return we.getText();
 	}
-
-
-	
-	public String getTextValue(T element,String ...val) throws Exception {
-		if(val.length > 0) {
-		   waitForVisibilityOfElement(element,val[0]);
-		   return getDynamicWebElement(element, val[0]).getText();
-		}
-		else {
-			waitForVisibilityOfElement(element);
-			return getWebElement(element).getText();
-			
-		}
+	public String getTextValue(T element)  {
+		WebElement we = null;
+		waitForVisibilityOfElement(element);
+		we=getWebElement(element);
+		return we.getText();
 	}
 	public void inputText(T element, String dynamicVal,String value) throws Exception {
 		try {
@@ -234,10 +208,10 @@ public class BasePage <T extends InitPageElement> {
 			test.log(LogStatus.FAIL, "Could not enter text" + test.addScreenCapture(addScreenshot()));
 			//throw e;
 		}
-		
+
 	}
-	
-	public void inputText(T element,String value) throws Exception {
+
+	public void inputText(T element,String value)  {
 		try {
 			we = getWebElement(element);
 			wait.until(ExpectedConditions.visibilityOf(we));
@@ -250,14 +224,14 @@ public class BasePage <T extends InitPageElement> {
 			test.log(LogStatus.FAIL, "Could not enter text" + test.addScreenCapture(addScreenshot()));
 			throw e;
 		}
-		
+
 	}
-	
+
 	public void clickWithJavaScript(T element,String val) throws Exception {
 		try {
 			we = getWebElement(element,val);
 			JavascriptExecutor js= (JavascriptExecutor) driver;
-			js.executeScript("arguments[0].click();", element); 
+			js.executeScript("arguments[0].click();", element);
 		}catch(Exception e) {
 			logger.error("Failed to click by Actions");
 			throw e;
@@ -269,23 +243,23 @@ public class BasePage <T extends InitPageElement> {
 			we = getWebElement(element,val);
 			actions.moveToElement(we).click().perform();
 			test.log(LogStatus.PASS, "Click element", "Clicked  " + element);
-			
+
 		}catch(Exception e) {
 			logger.error("Failed to click by Actions");
 			throw e;
 		}
 	}
-	
+
 	public void clickButton(T element,String val) throws Exception {
 		waitForVisibilityOfElement(element,val);
-	    we = getWebElement(element,val);
+		we = getWebElement(element,val);
 		try {
-		    we.click();
-		    test.log(LogStatus.PASS, "Click element", "Clicked  " + element);
+			we.click();
+			test.log(LogStatus.PASS, "Click element", "Clicked  " + element);
 		}
 		catch(ElementClickInterceptedException e) {
 			//	JavascriptExecutor js= (JavascriptExecutor) driver;
-				javascript.executeScript("arguments[0].click();", we); 
+			javascript.executeScript("arguments[0].click();", we);
 		}
 		catch(Exception e) {
 			logger.error("Error in click:" + e.getMessage());
@@ -295,14 +269,14 @@ public class BasePage <T extends InitPageElement> {
 	}
 	public void clickButton(T element) throws Exception {
 		waitForVisibilityOfElement(element);
-	    we = getWebElement(element);
+		we = getWebElement(element);
 		try {
-		    we.click();
-		    test.log(LogStatus.PASS, "Click element", "Clicked  " + element);
+			we.click();
+			test.log(LogStatus.PASS, "Click element", "Clicked  " + element);
 		}
 		catch(ElementClickInterceptedException e) {
-		//	JavascriptExecutor js= (JavascriptExecutor) driver;
-			javascript.executeScript("arguments[0].click();", we); 
+			//	JavascriptExecutor js= (JavascriptExecutor) driver;
+			javascript.executeScript("arguments[0].click();", we);
 		}
 		catch(Exception e) {
 			logger.error("Error in click:" ,e);
@@ -315,31 +289,37 @@ public class BasePage <T extends InitPageElement> {
 	}
 
 	public void waitForInvisibilityOfLoader() {
-		 By byelement = By.xpath("//img[@src='../../images/assets/loader3.gif']");
-		  try {
-		    wait.until(ExpectedConditions.invisibilityOfElementLocated(byelement));
-		  } catch (Exception e) {
-		    logger.error("Loader image still visible within wait time",e);
-		    throw e;
-		  }
-		}
-	
-	public void waitForVisibilityOfElement(T element,String ...val) throws Exception {
+		By byelement = By.xpath("//img[@src='../../images/assets/loader3.gif']");
 		try {
-			if(val.length>0) 
-			    wait.until(ExpectedConditions.elementToBeClickable(element.getDynamicBy(val[0])));
-			else 
-				wait.until(ExpectedConditions.elementToBeClickable(element.getBy()));
+			wait.until(ExpectedConditions.invisibilityOfElementLocated(byelement));
+		} catch (Exception e) {
+			logger.error("Loader image still visible within wait time",e);
+			throw e;
+		}
+	}
+
+	public void waitForVisibilityOfElement(T element)  {
+		try {
+			wait.until(ExpectedConditions.elementToBeClickable(element.getBy()));
 		}catch(Exception e) {
-			logger.error("Element not visible within wait time"+e);
-		    throw e;
+			logger.error("Element not visible within given wait time"+e);
+			throw e;
 		}
+	}
+	public void waitForVisibilityOfElement(T element,String val)  {
+		try {
+			wait.until(ExpectedConditions.elementToBeClickable(element.getDynamicBy(val)));
+
+		}catch(Exception e) {
+			logger.error("Element not visible within given wait time"+e);
+			throw e;
 		}
-	
+	}
+
 	public int rowCountinTable(T element,String val) {
 		return getWebElementList(element,val).size();
 	}
-	
+
 	public String waitForAlertToDisplay() throws Exception {
 		String alert;
 		try {
@@ -348,26 +328,33 @@ public class BasePage <T extends InitPageElement> {
 			test.log(LogStatus.INFO, "Alert:"+alert +":displayed" + test.addScreenCapture(addScreenshot()));
 		}catch(Exception e) {
 			logger.error("Alert not visible within wait time"+e);
-		    throw e;
+			throw e;
 		}
 		return alert;
 	}
-	public void waitAndClick(T element,String ... val) throws Exception {
-		
-		waitForVisibilityOfElement(element,val);
+	public void waitAndClick(T element,String dynamicVal) throws Exception {
+		waitForVisibilityOfElement(element,dynamicVal);
 		try {
-			if(val.length > 0)
-			    we = getDynamicWebElement(element,val[0]);
-			else
-				we = getWebElement(element);
-		    we.click();
-		    test.log(LogStatus.PASS, "Click element", "Clicked  " + element);
+			we = getWebElement(element,dynamicVal);
+			we.click();
+			test.log(LogStatus.PASS, "Click element", "Clicked  " + element);
 		}
 		catch(Exception e) {
 			logger.error("Error in click:" + e.getMessage());
 			test.log(LogStatus.FAIL, "Could not click element" + test.addScreenCapture(addScreenshot()));
 		}
-		
+	}
+	public void waitAndClick(T element) throws Exception {
+		waitForVisibilityOfElement(element);
+		try {
+			we = getWebElement(element);
+			we.click();
+			test.log(LogStatus.PASS, "Click element", "Clicked  " + element);
+		}
+		catch(Exception e) {
+			logger.error("Error in click:" + e.getMessage());
+			test.log(LogStatus.FAIL, "Could not click element" + test.addScreenCapture(addScreenshot()));
+		}
 	}
 	public boolean isElementDisplayed(T element){
 		boolean displayed = false;
@@ -380,27 +367,27 @@ public class BasePage <T extends InitPageElement> {
 		}
 		return displayed;
 	}
-	
+
 	public boolean isAlertPresent() {
-		
+
 		return true;
 	}
 	public void dragAndDrop(T element,String val,T destination) throws Exception {
 		waitForVisibilityOfElement(element,val);
 		actions.dragAndDrop(getWebElement(element,val),getWebElement(destination,"")).build().perform();
 	}
-	
-    public void dragAndDropFromList(T element,T destination) throws Exception {
-    	try {
-	        List<WebElement> tablelist = driver.findElements(element.getBy());
-	        System.out.println("The table name is "+tablelist.get(0));
-	    	actions.dragAndDrop(tablelist.get(0), getWebElement(destination,"")).build().perform();
-    	}catch(Exception e) {
-    		logger.error("Error in dragAndDrop:" + e.getMessage());
-    		test.log(LogStatus.FAIL, "Could not drag the element" );
-    		throw e;
-    	}
-    }
+
+	public void dragAndDropFromList(T element,T destination) throws Exception {
+		try {
+			List<WebElement> tablelist = driver.findElements(element.getBy());
+			System.out.println("The table name is "+tablelist.get(0));
+			actions.dragAndDrop(tablelist.get(0), getWebElement(destination,"")).build().perform();
+		}catch(Exception e) {
+			logger.error("Error in dragAndDrop:" + e.getMessage());
+			test.log(LogStatus.FAIL, "Could not drag the element" );
+			throw e;
+		}
+	}
 	public void takeScreenShot() {
 		Date d = new Date();
 		String screenshotFile = d.toString().replace(":", "_").replace(" ", "_") + ".png";
@@ -420,7 +407,7 @@ public class BasePage <T extends InitPageElement> {
 		File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 		return convertImageToString(scrFile);
 	}
-	
+
 	public String convertImageToString(File file) {
 		String encodedBase64 = null;
 		FileInputStream fileInputStreamReader = null;
@@ -437,7 +424,7 @@ public class BasePage <T extends InitPageElement> {
 		}
 		return "data:image/png;base64," + encodedBase64;
 	}
-	
+
 	public void switchWindow() {
 		String mainWindowHnd = driver.getWindowHandle();
 		Set<String> set = driver.getWindowHandles();
@@ -448,23 +435,23 @@ public class BasePage <T extends InitPageElement> {
 		}
 	}
 
-	 public String captureElementScreenshot(T element) throws Exception{
-	  
-	  File screen = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-	  int ImageWidth = getWebElement(element,"").getSize().getWidth();
-	  int ImageHeight = getWebElement(element,"").getSize().getHeight();  
-	  Point point = getWebElement(element,"").getLocation();
-	  int xcord = point.getX();
-	  int ycord = point.getY();
-	    
-	  BufferedImage img = ImageIO.read(screen);
-	  BufferedImage dest = img.getSubimage(xcord, ycord, ImageWidth, ImageHeight);
-	  ImageIO.write(dest, "png", screen);
-	  FileUtils.copyFile(screen, new File(Constant.SCREENSHOT_PATH+"\\screenshot.png"));
-	  return convertImageToString(screen);
-	 }
-	
-	
+	public String captureElementScreenshot(T element) throws Exception{
+
+		File screen = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+		int ImageWidth = getWebElement(element,"").getSize().getWidth();
+		int ImageHeight = getWebElement(element,"").getSize().getHeight();
+		Point point = getWebElement(element,"").getLocation();
+		int xcord = point.getX();
+		int ycord = point.getY();
+
+		BufferedImage img = ImageIO.read(screen);
+		BufferedImage dest = img.getSubimage(xcord, ycord, ImageWidth, ImageHeight);
+		ImageIO.write(dest, "png", screen);
+		FileUtils.copyFile(screen, new File(Constant.SCREENSHOT_PATH+"\\screenshot.png"));
+		return convertImageToString(screen);
+	}
+
+
 	public void scrollUp() throws Exception {
 		javascript.executeScript("window.scrollBy(0,-5000)", "");
 		wait(1);
@@ -480,7 +467,7 @@ public class BasePage <T extends InitPageElement> {
 		wait(2);
 		test.log(LogStatus.INFO, "Snapshot Below: " + test.addScreenCapture(addScreenshot()));
 	}
-	
+
 	public void scrollToTop() {
 		javascript.executeScript("window.scrollTo(0,0)", "");
 	}
@@ -509,6 +496,6 @@ public class BasePage <T extends InitPageElement> {
 		wait(2);
 		driver.navigate().refresh();
 	}
-	
-	
+
+
 }

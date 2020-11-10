@@ -30,8 +30,14 @@ public class ConnectorsPage extends BasePage {
                 clickButton(ORACLE_EBS_INFO);
                 break;
         }
-        waitAndClick(TEST_CONNECTOR);
-        waitForVisibilityOfElement(CONNECTOR_VALIDATE);
+        try {
+            waitAndClick(TEST_CONNECTOR);
+            waitForVisibilityOfElement(CONNECTOR_VALIDATE);
+        }catch(Exception e){
+            logger.error("Connection status not validated",e);
+            test.log(LogStatus.FAIL,"Connection can not be validated");
+            test.log(LogStatus.INFO, "Snapshot Below: " + test.addScreenCapture(addScreenshot()));
+        }
         return verifyTestConnection();
     }
     public boolean verifyTestConnection() throws Exception{
@@ -41,17 +47,19 @@ public class ConnectorsPage extends BasePage {
             return true;
         }
         else{
+            test.log(LogStatus.FAIL,"Connection isd not get validated successfully");
             return false;
         }
 
     }
     public boolean isConnectorSavedSuccessfully() throws Exception{
         if(getTextValue(CONNECTOR_SAVE_SUCCESS_POPUP).contains("Database Connector saved successfully.")){
-           // test.log(LogStatus.INFO, "Snapshot Below: " + test.addScreenCapture(addScreenshot()));
+            // test.log(LogStatus.INFO, "Snapshot Below: " + test.addScreenCapture(addScreenshot()));
             test.log(LogStatus.PASS,"Connector saved successfully");
             return true;
         }
         else{
+            test.log(LogStatus.FAIL,"Connection isd not get validated successfully");
             return false;
         }
 
@@ -67,7 +75,7 @@ public class ConnectorsPage extends BasePage {
         }
     }
 
-   /******* Create a New DB Connector *************/
+    /******* Create a New DB Connector *************/
     public String createDBConnector(Hashtable<String, String> data) throws Exception{
         String connector_name = Utility.getRandomNumber("TESTCONNECT");
         clickButton(CREATE_CONNECTORS);
@@ -84,9 +92,14 @@ public class ConnectorsPage extends BasePage {
     public boolean isConnectorCreated(String connector_name) throws Exception{
         inputText(SEARCH_CONNECTOR,connector_name);
         if(isElementDisplayed(CONNECTOR,connector_name)){
+            clickButton(INFO_CONNECTOR);
+            waitForVisibilityOfElement(CREATED_CONNECTOR_IMAGE);
             test.log(LogStatus.INFO, "Snapshot Below: " + test.addScreenCapture(addScreenshot()));
             test.log(LogStatus.PASS,"Created Connector",connector_name +" "+"created successfully");
 
+        }else{
+            test.log(LogStatus.INFO, "Snapshot Below: " + test.addScreenCapture(addScreenshot()));
+            test.log(LogStatus.FAIL,"Connector creation failed",connector_name +" "+"not created");
         }
         return true;
     }

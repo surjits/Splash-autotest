@@ -151,15 +151,15 @@ public static WebDriver driver;
 	}
 	@AfterClass
 	 public void afterClass() {
-		//extent.endTest(test);
-		//extent.flush();
-		//driver.quit();
+		extent.endTest(test);
+		extent.flush();
+		driver.quit();
 	}
 	@AfterTest
 	
 	public void closetest() {
-		extent.flush();
-		extent.close();
+	//	extent.flush();
+	//	extent.close();
 	}
 	
 	
