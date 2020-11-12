@@ -7,6 +7,7 @@ import org.openqa.selenium.WebElement;
 
 public enum AdminPageElement implements InitPageElement {
     CONNECTORS(getValueFromPropFile("connectors")),
+    ERP_MAPPING(getValueFromPropFile("erp_mapping")),
     END(getValueFromPropFile("submit"));
     private String loc;
     public String expression;

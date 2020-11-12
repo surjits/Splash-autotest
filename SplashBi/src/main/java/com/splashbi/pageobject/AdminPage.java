@@ -24,7 +24,7 @@ public class AdminPage extends BasePage{
 
     }
 
-    public void navigateToConnectorsPage() throws Exception {
+    public void navigateToConnectorsPage() {
         try {
             logger.info("Entered navigateToConnectorsPage method");
 

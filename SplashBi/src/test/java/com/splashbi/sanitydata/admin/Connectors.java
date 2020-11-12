@@ -1,8 +1,7 @@
-package com.splashbi.sanitydata.Admin;
+package com.splashbi.sanitydata.admin;
 
 import com.relevantcodes.extentreports.ExtentTest;
 import com.relevantcodes.extentreports.LogStatus;
-import com.splashbi.sanitydata.OracleEBS;
 import com.splashbi.setup.TestSetup;
 import org.apache.log4j.Logger;
 import org.testng.Assert;
