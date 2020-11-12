@@ -46,6 +46,12 @@
 
 		}
 
+	],
+	"createReport": [
+		{
+		"Run": "Yes"
+
+	    }
 	]
 	
 	
