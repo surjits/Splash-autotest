@@ -30,6 +30,7 @@ public class ExtentReport {
 		//if(extent == null) {
 			Date d = new Date();
 			String fileName = d.toString().replace(":", "_").replace(" ", "_") +"_"+testName+".html";
+		    // String fileName = testName+".html";
 			log.debug("File name is :" +fileName);
 			extent = new ExtentReports(theDir + "/" + fileName, true, DisplayOrder.OLDEST_FIRST);
             log.debug("Dir name is :"+theDir+" and File Name is: "+fileName);

@@ -51,6 +51,7 @@ public class OracleEBS extends TestSetup {
             home.navigateToAdminPage();
             admin.navigateToConnectorsPage();
             String connectorname= connector.createDBConnector(data);
+            logger.info("Testcase createDBConnector Passed");
             assertTrue(connector.isConnectorCreated(connectorname));
 
         }catch(Exception e){

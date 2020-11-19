@@ -1,7 +1,7 @@
 {
 	"createMultipleFilter": [
 		{
-			
+
 			"Run": "No",
 			"bussinessApp": "autoBusinessApplication",
 			"dbconnector": "automationConnection",
@@ -10,27 +10,95 @@
 			"Filter2":"Product Type",
 			"text1":"MOVIE_NAME = 'The Dark Tower'",
 			"text2":"PRODUCT_TYPE = 'Movie'"
-			
+
 		}
 	],
-	
+
 	"createDomainLOV": [
-	    {
-	        "Run": "Yes",
+		{
+			"Run": "Yes",
 			"lovType": "Query",
 			"lovQuery": "SELECT CITY,REGION FROM MS_STORES"
-	     
-	    }
-	    
+
+		}
+
+	],
+
+	"createDomainWithMultiTable": [
+		{
+			"Run": "Yes",
+			"bussinessApp": "Splash Samples",
+			"dbconnector": "splash_demos",
+			"tablenames":"Ms_Products,Ms_Sales"
+
+		}
+
+	],
+	"shareDomainWithAnUser": [
+		{
+			"Run": "Yes",
+			"domainName": "AUTODOM11",
+			"user_name":"DPUSER145",
+			"password": "1111",
+			"new_password": "7890"
+
+		}
+
+	],
+	"createReport": [
+		{
+			"Run": "Yes",
+			"domainName": "TESTDOM99",
+			"tablename":"Ms_Products"
+
+		}
+
+	],
+	"createReportSet": [
+		{
+			"Run": "Yes",
+			"businessapp_name": "Splash Samples"
+
+		}
+
+	],
+	"createNonEbsChart": [
+		{
+			"Run": "Yes",
+			"domainName": "AUTODOM11",
+			"tablename":"Ms Sales",
+			"col_dimension": "Sales Id",
+			"col_measures": "Store Key"
+		}
+
+	],
+	"createJoinForDomainTable": [
+		{
+			"Run": "Yes",
+			"domainName": "AUTODOM11",
+			"tablename":"Ms Products"
+
+		}
+
 	],
 	"checkConnectionStatus": [
-	    {
-	        "Run": "Yes",
-            "connector": "oracleEBS"
-	     
-	    }
-	    
+		{
+			"Run": "Yes",
+			"connector": "oracleEBS"
+
+		}
+
 	],
+	"shareConnectorWithUser": [
+		{
+			"Run": "Yes",
+			"connector": "sanconn11",
+			"user_name": "Santest11"
+
+		}
+
+	],
+
 	"createDBConnector": [
 		{
 			"Run": "Yes",
@@ -46,7 +114,120 @@
 
 		}
 
+	],
+	"createUserGroup": [
+		{
+			"Run": "Yes"
+
+		}
+
+	],
+	"createUserGroupAndAddUser": [
+		{
+			"Run": "Yes"
+
+		}
+
+	],
+	"createUserMapping": [
+		{
+			"Run": "Yes",
+			"splashBi_empname": "Auto Test",
+			"ebs_connection": "auto-connector",
+			"authentication_method": "Native"
+
+		}
+
+	],
+	"importOracleEBSResponsibilities": [
+		{
+			"Run": "Yes",
+			"ebs_connection": "auto-connector",
+			"responsibility": "1Sync Super User,Standard"
+
+		}
+
+	],
+	"addSResponsibilitiesToUser": [
+		{
+			"Run": "Yes",
+			"splashBi_empname": "Test me"
+		}
+
+	],
+	"createBusinessApplication": [
+		{
+			"Run": "Yes"
+
+		}
+
+	],
+	"createFolder": [
+		{
+			"Run": "Yes",
+			"businessapp": "autoBusinessApplication"
+
+		}
+
+	],
+	"setUserGroupCreationSiteInSettings": [
+		{
+			"Run": "Yes",
+			"site_option":"On"
+		}
+
+	],
+	"setDashboardListviewSiteInSettings": [
+		{
+			"Run": "Yes",
+			"site_option":"Both"
+		}
+
+	],
+	"createUser": [
+		{
+			"Run": "Yes",
+			"authentication_method": "Native",
+			"password": "test",
+			"first_name": "Auto",
+			"last_name": "Test",
+			"email": "test@test.com",
+
+			"create_privilege": "yes",
+			"create_all": "yes",
+			"create_Domain": "Yes",
+			"create_Report": "Yes",
+			"create_Dashboard": "Yes",
+			"create_Chart": "Yes",
+			"create_Report_set": "Yes",
+
+			"copy_privilege": "yes",
+			"copy_all": "yes",
+			"copy_Domain": "No",
+			"copy_Report": "Yes",
+			"copy_Dashboard": "Yes",
+			"copy_Chart": "Yes",
+			"copy_Report_set": "Yes",
+
+			"share_privilege": "yes",
+			"share_all": "yes",
+
+			"share_Domain": "Yes",
+			"share_Report": "Yes",
+			"share_Dashboard": "Yes",
+			"share_Chart": "Yes",
+			"share_Report_set": "Yes",
+			"share_Report_set_process": "Yes",
+
+			"distribution_privilege": "yes",
+			"distribution_all": "yes",
+			"distribution_email": "Yes",
+			"distribution_ftp": "No",
+			"distribution_filesystem": "No",
+			"distribution_bursting": "No",
+			"distribution_publishing": "No"
+		}
+
 	]
-	
-	
+
 }

@@ -51,7 +51,7 @@ public static Logger logger = Logger.getLogger(CreateDataPoint.class);
 			Assert.fail();
         }
 }
-	/*
+
 	public void createJoinForDomainTable(Hashtable<String, String> data) throws InterruptedException {
 		try {
 			ExtentTest childTest=extent.startTest("Login To the SplashBi");
@@ -73,5 +73,5 @@ public static Logger logger = Logger.getLogger(CreateDataPoint.class);
 			Assert.fail();
 			
 		}
-}*/
+}
 }

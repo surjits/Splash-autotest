@@ -8,7 +8,7 @@
 </listeners>
 <test name="Smoke_Test">
   <classes>
-     <class name="com.splashbi.sanitydata.OracleEBS"/>
+     <class name="com.splashbi.sanitydata.domain.Domain"/>
     <!--<class name="com.splashbi.smoketest.CreateDataPoint"/>-->
   </classes>
   </test>

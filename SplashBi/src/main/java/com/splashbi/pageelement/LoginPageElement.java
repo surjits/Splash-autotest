@@ -8,7 +8,14 @@ import com.splashbi.utility.Utility;
 public enum LoginPageElement implements InitPageElement {
 	USER_NAME(getValueFromPropFile("user")),
 	PASSWORD(getValueFromPropFile("password")),
-	LOGIN(getValueFromPropFile("submit")),
+	LOGIN(getValueFromPropFile("login_button")),
+	VERIFY_CHANGE_PASSWORD_WINDOW(getValueFromPropFile("verify_change_password_window")),
+	CURRENT_PASSWORD(getValueFromPropFile("current_password")),
+	NEW_PASSWORD(getValueFromPropFile("new_password")),
+	CONFIRM_PASSWORD(getValueFromPropFile("confirm_password")),
+	SAVE_PASSWORD(getValueFromPropFile("save_password")),
+	SAVE_PASSWORD_OK(getValueFromPropFile("ok_button")),
+	VERIFY_SUCCESS_WINDOW(getValueFromPropFile("verify_success_window")),
 	WARNING(getValueFromPropFile("warning"));
 	
 	private String loc;

@@ -36,7 +36,7 @@ public class DomainModule extends TestSetup {
 		    setChildTest(childTest1);
 		    home.navigateToDomainPage();
 			domainName=domain.createDomainWithNewFolder(data.get("bussinessApp"),data.get("dbconnector"));
-			assertTrue(domain.isDomainCreated(),"Domain creation failed");
+			assertTrue(domain.isDomainTabOpen(domainName),"Domain creation failed");
 			
 			//Create Domain Filter 
 		    ExtentTest childTest2 = extent.startTest("Create domain Filter");
@@ -49,7 +49,7 @@ public class DomainModule extends TestSetup {
 			ExtentTest childTest3 = extent.startTest("Create Report");
 		    setChildTest(childTest3);
 			home.navigateToReportPage();
-			String reportname=report.createReport(domainName,data.get("Tablename"),data.get("Filter1"));
+			String reportname=report.createReport(domainName,data.get("Tablename"));
 			assertTrue(report.isReportCreated(reportname));
 			
 			//Add Filter to Report and Run
@@ -86,7 +86,7 @@ public class DomainModule extends TestSetup {
 		    setChildTest(childTest1);
 		    home.navigateToDomainPage();
 			domainName=domain.createDomainWithNewFolder(data.get("bussinessApp"),data.get("dbconnector"));
-			assertTrue(domain.isDomainCreated(),"Domain creation failed");
+			assertTrue(domain.isDomainTabOpen(domainName),"Domain creation failed");
 			
 			ExtentTest childTest2 = extent.startTest("Create Domain LOV and Verify");
 			setChildTest(childTest2);
@@ -116,7 +116,7 @@ public class DomainModule extends TestSetup {
 		    setChildTest(childTest1);
 		    home.navigateToDomainPage();
 			domainName=domain.createDomainWithNewFolder(data.get("bussinessApp"),data.get("dbconnector"));
-			assertTrue(domain.isDomainCreated(),"Domain creation failed");
+			assertTrue(domain.isDomainTabOpen(domainName),"Domain creation failed");
 			
 			//Add Tables
 			

@@ -96,6 +96,7 @@ public static Object[][] getData(File jsonfilepath, String testCaseName){
 	 System.out.println("===========================================================================================================================");
 	return data;		
 }
+
 public static String getValueForKey(File jsonfilepath, String testCaseName, String key){
 	String value = null;
 	try {
@@ -118,7 +119,8 @@ public static String getValueForKey(File jsonfilepath, String testCaseName, Stri
 		JsonObject rootObject = js.get(0).getAsJsonObject();
 		value = rootObject.get(key).getAsString();
 		//	value = rowdata.get("Run").getAsString();
-
+		JsonArray child = rootObject.getAsJsonArray("Create");
+		System.out.println(child);
 
 	}catch(Exception e){
 		System.out.println("Failed");
@@ -134,7 +136,7 @@ public Object[][] testDataSet() {
 
 public static void main(String args[]) {
 	
-	String val = getValueForKey(new File(Constant.TEST_DATA_JSON),"createDBConnector","Run");
+	String val = getValueForKey(new File(Constant.TEST_DATA_JSON),"createUser","Run");
 	System.out.println("value is:"+val);
 	
 }

@@ -15,16 +15,7 @@ import javax.imageio.ImageIO;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
-import org.openqa.selenium.By;
-import org.openqa.selenium.ElementClickInterceptedException;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.Point;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -47,7 +38,7 @@ public class BasePage <T extends InitPageElement> {
 	String log4jprop;
 	public BasePage(WebDriver driver) {
 		this.driver = driver;
-		wait = new WebDriverWait(driver,60);
+		wait = new WebDriverWait(driver,120);
 		actions = new Actions(driver);
 		this.log4jprop = Constant.LOG4J_PATH;
 		PropertyConfigurator.configure(log4jprop);
@@ -67,7 +58,7 @@ public class BasePage <T extends InitPageElement> {
 		this.log4jprop = Constant.LOG4J_PATH;
 		PropertyConfigurator.configure(log4jprop);
 		this.driver = driver;
-		wait = new WebDriverWait(driver,50);
+		wait = new WebDriverWait(driver,60);
 		this.test = test;
 		actions = new Actions(driver);
 	}
@@ -96,7 +87,7 @@ public class BasePage <T extends InitPageElement> {
 		try {
 			driver.get(url);
 			wait(2);
-			test.log(LogStatus.PASS, "URL opened" + test.addScreenCapture(addScreenshot()));
+			//test.log(LogStatus.PASS, "URL opened" + test.addScreenCapture(addScreenshot()));
 		}
 		catch(Exception e) {
 			throw e;
@@ -144,10 +135,11 @@ public class BasePage <T extends InitPageElement> {
 
 	public List<WebElement> getWebElementList(T element,String val) {
 		List<WebElement> wl = null;
-		if(val.isEmpty())
-			wl = driver.findElements(element.getBy());
-		else
-			wl = driver.findElements(element.getBy());
+		try {
+			wl = driver.findElements(element.getDynamicBy(val));
+		}catch(Exception e){
+			logger.error("List Element not found",e);
+		}
 		return wl;
 	}
 
@@ -161,6 +153,48 @@ public class BasePage <T extends InitPageElement> {
 				};
 
 		wait.until(pageLoadCondition);
+	}
+
+	public int getListSize(T elementlist){
+		List<WebElement> items = getWebElementList(elementlist);
+		return items.size();
+	}
+	public int getListSize(T elementlist,String val){
+		List<WebElement> items = getWebElementList(elementlist,val);
+		return items.size();
+	}
+	public void selectFirstNItemFromList(T elementList,int count){
+		try {
+			List<WebElement> items = getWebElementList(elementList);
+			for(int i =0; i< count;i++) {
+				items.get(i).click();
+
+			}
+		}catch(Exception e){
+			test.log(LogStatus.FAIL, "Could not select first n itemsfrom list" + test.addScreenCapture(addScreenshot()));
+		}
+	}
+	public boolean isElementSelected(T element){
+		boolean selected = false;
+		try{
+			if(getWebElement(element).isSelected()) {
+
+				selected = true;
+			}
+		}catch(Exception e){
+			selected = false;
+		}
+		return selected;
+	}
+
+	public void selectFirstItemFromList(T elementList){
+		try {
+			List<WebElement> items = getWebElementList(elementList);
+			items.get(0).click();
+
+		}catch(Exception e){
+			test.log(LogStatus.FAIL, "Could not select first from list" + test.addScreenCapture(addScreenshot()));
+		}
 	}
 	public void selectItemFromUlist(T element, String listitem) {
 		try {
@@ -181,6 +215,21 @@ public class BasePage <T extends InitPageElement> {
 		else {
 			return false;
 		}
+	}
+	public boolean isElementPresent(T element) {
+		boolean isDisplayed = false;
+		try {
+			if(getWebElement(element).isDisplayed()){
+				isDisplayed = true;
+			}
+		}catch(Exception e) {
+			logger.error("Element not displayed",e);
+			isDisplayed = false;
+		}
+		return isDisplayed;
+	}
+	public void hitEnterKey(T element){
+		getWebElement(element).sendKeys(Keys.RETURN);
 	}
 
 	public String getTextValue(T element,String dynamicVal)  {
@@ -207,24 +256,30 @@ public class BasePage <T extends InitPageElement> {
 			//logger.error("Error in input text:" + e.toString());
 			test.log(LogStatus.FAIL, "Could not enter text" + test.addScreenCapture(addScreenshot()));
 			//throw e;
+		}catch(Exception e) {
+			//logger.error("Error in input text:" + e.toString());
+			test.log(LogStatus.FAIL, "Could not enter text" + test.addScreenCapture(addScreenshot()));
+			throw e;
 		}
-
 	}
 
 	public void inputText(T element,String value)  {
 		try {
 			we = getWebElement(element);
 			wait.until(ExpectedConditions.visibilityOf(we));
+			we.click();
 			we.clear();
 			we.sendKeys(value);
 			test.log(LogStatus.PASS, " Enter Text", "Entered value  " + value + " in " + element+" field");
-		}
-		catch(NoSuchElementException e) {
+		}catch(NoSuchElementException e) {
+			//logger.error("Error in input text:" + e.toString());
+			test.log(LogStatus.FAIL, "Could not enter text" + test.addScreenCapture(addScreenshot()));
+			throw e;
+		}catch(Exception e) {
 			//logger.error("Error in input text:" + e.toString());
 			test.log(LogStatus.FAIL, "Could not enter text" + test.addScreenCapture(addScreenshot()));
 			throw e;
 		}
-
 	}
 
 	public void clickWithJavaScript(T element,String val) throws Exception {
@@ -297,12 +352,39 @@ public class BasePage <T extends InitPageElement> {
 			throw e;
 		}
 	}
+	public void waitForVisibilityOfSuccessMessage() {
+		By byelement = By.xpath("//div[@class='sbi2-success-popup-msg']");
+		try {
+			wait.until(ExpectedConditions.visibilityOfElementLocated(byelement));
+		} catch (Exception e) {
+			logger.error("Success Message not yet visible within wait time",e);
+			throw e;
+		}
+	}
+
+	public void waitForElementToBePresent(T element)  {
+		try {
+			wait.until(ExpectedConditions.presenceOfElementLocated(element.getBy()));
+		}catch(Exception e) {
+			logger.error("Element not visible within given wait time"+e);
+			throw e;
+		}
+	}
+	public void waitForElementToBePresent(T element,String val)  {
+		try {
+			wait.until(ExpectedConditions.presenceOfElementLocated(element.getDynamicBy(val)));
+		}catch(Exception e) {
+			logger.error("Element not visible within given wait time"+e);
+			throw e;
+		}
+	}
 
 	public void waitForVisibilityOfElement(T element)  {
 		try {
 			wait.until(ExpectedConditions.elementToBeClickable(element.getBy()));
 		}catch(Exception e) {
-			logger.error("Element not visible within given wait time"+e);
+			logger.error("Element not visible within given wait time",e);
+			e.printStackTrace();
 			throw e;
 		}
 	}
@@ -332,6 +414,34 @@ public class BasePage <T extends InitPageElement> {
 		}
 		return alert;
 	}
+	public void acceptAlert(){
+		Alert alert = driver.switchTo().alert();
+		alert.accept();
+	}
+	public boolean isAlertPresent() throws Exception {
+		boolean alert = false;
+		try {
+			wait.until(ExpectedConditions.alertIsPresent());
+			alert= true;
+		} catch (TimeoutException eTO) {
+			alert = false;
+		}
+		return alert;
+	}
+	public void clickOkIfWarningPresent(){
+		By warn = By.id("warning_Box");
+		By ok = By.xpath("//button[@title='OK']");
+		try {
+			wait.until(ExpectedConditions.visibilityOfElementLocated(warn));
+			if(driver.findElement(warn).isDisplayed()){
+				driver.findElement(ok).click();
+			}
+
+		} catch (Exception e) {
+
+		}
+
+	}
 	public void waitAndClick(T element,String dynamicVal) throws Exception {
 		waitForVisibilityOfElement(element,dynamicVal);
 		try {
@@ -343,6 +453,9 @@ public class BasePage <T extends InitPageElement> {
 			logger.error("Error in click:" + e.getMessage());
 			test.log(LogStatus.FAIL, "Could not click element" + test.addScreenCapture(addScreenshot()));
 		}
+	}
+	public void test(){
+		System.out.println("Test");
 	}
 	public void waitAndClick(T element) throws Exception {
 		waitForVisibilityOfElement(element);
@@ -359,22 +472,36 @@ public class BasePage <T extends InitPageElement> {
 	public boolean isElementDisplayed(T element){
 		boolean displayed = false;
 		try{
-			if (getWebElement(element).isDisplayed()){
+			waitForVisibilityOfElement(element);
+			if(getWebElement(element).isDisplayed()){
+				displayed = true;
+			}
+		}catch(NoSuchElementException e){
+			displayed = false;
+			logger.error("Element not found:" ,e);
+			e.printStackTrace();
+
+		}
+		return displayed;
+	}
+
+	public boolean isListElementDisplayed(T element){
+		boolean displayed = false;
+		try{
+			waitForVisibilityOfElement(element);
+			if(getWebElement(element).isDisplayed()){
 				displayed = true;
 			}
 		}catch(Exception e){
+			displayed = false;
 			logger.error("Error in click:" + e.getMessage());
 		}
 		return displayed;
 	}
 
-	public boolean isAlertPresent() {
-
-		return true;
-	}
 	public void dragAndDrop(T element,String val,T destination) throws Exception {
 		waitForVisibilityOfElement(element,val);
-		actions.dragAndDrop(getWebElement(element,val),getWebElement(destination,"")).build().perform();
+		actions.dragAndDrop(getWebElement(element,val),getWebElement(destination)).build().perform();
 	}
 
 	public void dragAndDropFromList(T element,T destination) throws Exception {
@@ -493,8 +620,9 @@ public class BasePage <T extends InitPageElement> {
 	}
 
 	public void refreshPage() throws Exception {
-		wait(2);
+		//wait(2);
 		driver.navigate().refresh();
+
 	}
 
 

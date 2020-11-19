@@ -30,7 +30,18 @@ public enum DomainPageElement implements InitPageElement {
 	CHILD_COL_SEARCH_BUTTON(getValueFromPropFile("child_col_search_button")),
 	REVERSE_JOIN(getValueFromPropFile("reverse_join")),
 	SAVE_JOIN(getValueFromPropFile("save_join")),
-	
+	NO_DATA_IN_SUGGESTED_JOIN(getValueFromPropFile("no_data_in_suggested_join")),
+	MASS_EDIT_ICON(getValueFromPropFile("mass_edit_icon")),
+	SHARE_ICON(getValueFromPropFile("share_icon")),
+	VERIFY_SHARE_DOMAIN_WINDOW(getValueFromPropFile("verify_sharedomain_page")),
+	SEARCH_AVAILABLE_USERS_TO_SHARE(getValueFromPropFile("search_available_users_to_share")),
+	MOVE_RIGHT_ICON(getValueFromPropFile("move_right_icon")),
+	EDIT_ENABLE(getValueFromPropFile("edit_enable")),
+	SAVE_SHARE(getValueFromPropFile("save_share")),
+	MORE_ICON_IN_DOMAIN_WINDOW(getValueFromPropFile("save_share")),
+	INFO_DOMAIN(getValueFromPropFile("info_domain")),
+	DOMAIN_SHARE_TAB(getValueFromPropFile("domain_share_tab")),
+	USERS_EXPAND_ARROW(getValueFromPropFile("users_exapnd_arrow")),
 	//Domain LOV Edit elements
 	
 	DOMAIN_LOV_BUTTON(getValueFromPropFile("domain_lov_button")),

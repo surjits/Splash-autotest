@@ -5,6 +5,10 @@ import java.lang.reflect.Method;
 import java.util.concurrent.TimeUnit;
 
 import com.splashbi.pageobject.*;
+import com.splashbi.pageobject.admin.*;
+import com.splashbi.pageobject.admin.setup.BusinessAppPage;
+import com.splashbi.pageobject.admin.setup.FolderPage;
+import com.splashbi.pageobject.admin.setup.UserGroupPage;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.openqa.selenium.WebDriver;
@@ -45,6 +49,14 @@ public static WebDriver driver;
 	public static ReportPage report = null;
 	public static AdminPage admin = null;
 	public static ConnectorsPage connector = null;
+	public static UsersPage users = null;
+	public static SetupPage setup = null;
+	public static UserGroupPage usergroup = null;
+	public static SettingsPage setting = null;
+	public static FolderPage folder = null;
+	public static BusinessAppPage businessapp = null;
+	public static ERPMappingPage erpmap = null;
+	public static DashboardPage dashboard = null;
 	
 	public static WebDriver initDriver() {
 		WebDriverManager.chromedriver().setup();
@@ -72,7 +84,15 @@ public static WebDriver driver;
 		domain = new DomainPage(driver);
 		report = new ReportPage(driver);
 		admin = new AdminPage(driver);
+		users = new UsersPage(driver);
+		setup = new SetupPage(driver);
+		setting = new SettingsPage(driver);
+		folder = new FolderPage(driver);
+		usergroup = new UserGroupPage(driver);
 		connector = new ConnectorsPage(driver);
+		erpmap = new ERPMappingPage(driver);
+		businessapp = new BusinessAppPage(driver);
+		dashboard = new DashboardPage(driver);
 	}
 	public static WebDriver runInHeadLess() {
 		ChromeOptions options = new ChromeOptions();
@@ -123,6 +143,7 @@ public static WebDriver driver;
 				test.log(LogStatus.FAIL, "failed");
 			}
 			extent.endTest(test);
+		//	driver.quit();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -138,8 +159,17 @@ public static WebDriver driver;
 		connector.setTest(childtest);
 		connector.setTest(childtest);
 		home.setTest(childtest);
+		admin.setTest(childtest);
 		domain.setTest(childtest);
 		report.setTest(childtest);
+		users.setTest(childtest);
+		usergroup.setTest(childtest);
+		setup.setTest(childtest);
+		setting.setTest(childtest);
+		folder.setTest(childtest);
+		businessapp.setTest(childtest);
+		erpmap.setTest(childtest);
+		dashboard.setTest(childtest);
 		test.appendChild(childtest);
 	}
 	
@@ -153,7 +183,7 @@ public static WebDriver driver;
 	 public void afterClass() {
 		extent.endTest(test);
 		extent.flush();
-		driver.quit();
+//	    driver.quit();
 	}
 	@AfterTest
 	

@@ -9,8 +9,11 @@ import com.splashbi.utility.Utility;
 public enum HomePageElement implements InitPageElement {
 	    HOME(getValueFromPropFile("homeLink")),
 	    REPORT(getValueFromPropFile("reportLink")),
+	    DASHBOARD(getValueFromPropFile("dashboardLink")),
 	    DOMAIN(getValueFromPropFile("domainLink")),
 	    ADMINISTRATOR(getValueFromPropFile("administratorLink")),
+	    LOGOUT(getValueFromPropFile("logout")),
+	    VERIFY_LOGOUT(getValueFromPropFile("verify_logout")),
 	    EXPAND(getValueFromPropFile("expandLink"));
 		
 		private String loc;
