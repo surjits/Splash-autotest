@@ -2,13 +2,15 @@ package com.splashbi.pageobject.admin;
 
 import com.relevantcodes.extentreports.ExtentTest;
 import com.relevantcodes.extentreports.LogStatus;
+//import com.splashbi.pageelement.HomePageElement;
 import com.splashbi.pageelement.InitPageElement;
+import com.splashbi.pageelement.admin.AdminPageElement;
 import com.splashbi.pageobject.BasePage;
 import org.apache.log4j.Logger;
+
+import static com.splashbi.pageelement.HomePageElement.*;
 import static com.splashbi.pageelement.admin.AdminPageElement.*;
 import org.openqa.selenium.WebDriver;
-
-import static com.splashbi.pageelement.HomePageElement.DOMAIN;
 
 public class AdminPage extends BasePage {
     Logger logger = Logger.getLogger(AdminPage.class);
@@ -24,60 +26,57 @@ public class AdminPage extends BasePage {
         this.setExtentTest(test);
 
     }
+    public void navigateToPageInAdmin(String pagename){
+        AdminPageElement page=null;
+        switch(pagename){
+            case "connector":
+                page = CONNECTORS;
+                break;
+            case "users":
+                page = USERS;
+                break;
+            case "settings":
+                page = SETTINGS;
+                break;
+            case "erp":
+                page = ERP_MAPPING;
+                break;
+            case "setup":
+                page = SETUP;
+                break;
+        }
+        try {
+            clickButton(page);
+            waitForInvisibilityOfLoader();
+            wait(1);
+            while(isElementDisplayed(ADMIN_HOME)) {
+                clickButton(page);
+                waitForInvisibilityOfLoader();
+            }
+            test.log(LogStatus.PASS,"Navigated to page"+" "+pagename);
+            test.log(LogStatus.INFO, "Navigated to Admin Page: ");
+        } catch (Exception e) {
+            test.log(LogStatus.ERROR, printError(e,2));
+            test.log(LogStatus.INFO, "Snapshot Below: " + test.addScreenCapture(addScreenshot()));
+            test.log(LogStatus.FAIL,"Failed to navigate to "+" "+pagename);
+        }
+
+    }
 
     public void navigateToConnectorsPage()  {
-        try {
-            logger.info("Entered navigateToConnectorsPage method");
-
-            waitAndClick(CONNECTORS);
-            waitForInvisibilityOfLoader();
-            test.log(LogStatus.INFO, "Navigated to Connector Page: ");
-        } catch (Exception e) {
-            test.log(LogStatus.FAIL, "Failed to Navigate to Connectors Page: ");
-
-        }
+        navigateToPageInAdmin("connector");
     }
     public void navigateToUsersPage()  {
-        try {
-            logger.info("Entered navigateToUsersPage method");
-
-            waitAndClick(USERS);
-           // waitForInvisibilityOfLoader();
-            test.log(LogStatus.PASS, "Navigated to Users Page: ");
-        } catch (Exception e) {
-            test.log(LogStatus.FAIL, "Failed to Navigate to Users Page: ");
-        }
+        navigateToPageInAdmin("users");
     }
     public void navigateToSetupPage()  {
-        try {
-            logger.info("Entered navigateToUsersPage method");
-
-            waitAndClick(SETUP);
-            test.log(LogStatus.PASS, "Navigated to Setup Page: ");
-        } catch (Exception e) {
-            test.log(LogStatus.FAIL, "Failed to Navigate to Setup Page: ");
-        }
+        navigateToPageInAdmin("setup");
     }
     public void navigateToSettingsPage()  {
-        try {
-            logger.info("Entered navigateToUsersPage method");
-
-            waitAndClick(SETTINGS);
-            test.log(LogStatus.PASS, "Navigated to Settings Page: ");
-        } catch (Exception e) {
-            test.log(LogStatus.FAIL, "Failed to Navigate to Settings Page: ");
-        }
+        navigateToPageInAdmin("settings");
     }
     public void navigateToERPMappingPage()  {
-        try {
-            logger.info("Entered navigateToUsersPage method");
-
-            waitAndClick(ERP_MAPPING);
-            test.log(LogStatus.PASS, "Navigated to ERP Mapping Page: ");
-        } catch (Exception e) {
-            test.log(LogStatus.FAIL, "Failed to Navigate to ERP Mapping Page: ");
-            logger.error("Failed to navigate to ERP-Mapping Page",e);
-        }
+        navigateToPageInAdmin("erp");
     }
 
 

@@ -18,6 +18,12 @@ public class ERPMapping extends TestSetup {
     @Test(dataProvider = "LoadData")
     public void createUserMapping(Hashtable<String, String> data){
         try{
+            if(userName.isEmpty()){
+                empName = data.get("splashBi_empname");
+            }
+            if(connectorName.isEmpty()){
+                connectorName = data.get("connector");
+            }
             logger.info("In createUserMapping and run value is :"+data.get("Run") );
             ExtentTest childTest=extent.startTest("Login To SplashBi");
             setChildTest(childTest);
@@ -33,8 +39,8 @@ public class ERPMapping extends TestSetup {
             ExtentTest childTest2 = extent.startTest("Create ERP Mapping");
             setChildTest(childTest2);
             erpmap.navigateToOracleEBusinessSuite();
-            erpmap.createERPMapping(data.get("splashBi_empname"),data.get("ebs_connection"),data.get("authentication_method"));
-            assertTrue(erpmap.verifyMapping(data.get("splashBi_empname")));
+            erpmap.createERPMapping(empName,connectorName,data.get("authentication_method"));
+            assertTrue(erpmap.verifyUserMapping(empName));
             logger.info("Testcase createDBConnector completed");
 
         } catch(Exception e){
@@ -45,7 +51,12 @@ public class ERPMapping extends TestSetup {
     }
     @Test(dataProvider = "LoadData")
     public void importOracleEBSResponsibilities(Hashtable<String, String> data){
+
+
         try{
+            if(connectorName.isEmpty()) {
+                connectorName = data.get("connector");
+            }
             logger.info("In importOracleEBSResponsibilities and run value is :"+data.get("Run") );
             ExtentTest childTest=extent.startTest("Login To SplashBi");
             setChildTest(childTest);
@@ -61,7 +72,7 @@ public class ERPMapping extends TestSetup {
             ExtentTest childTest2 = extent.startTest("Import EBS Roles-Responsibility");
             setChildTest(childTest2);
             erpmap.navigateToOracleEBusinessSuite();
-            erpmap.importEBSResponsibility(data.get("ebs_connection"),data.get("responsibility"));
+            erpmap.importEBSResponsibility(connectorName,data.get("responsibility"));
             assertTrue(erpmap.verifyImportEBS(data.get("responsibility")));
             logger.info("Testcase importOracleEBSResponsibilities completed");
 
@@ -74,6 +85,9 @@ public class ERPMapping extends TestSetup {
     @Test(dataProvider = "LoadData")
     public void addSResponsibilitiesToUser(Hashtable<String, String> data){
         try{
+            if(userName.isEmpty()){
+                empName = data.get("splashBi_empname");
+            }
             logger.info("In addSResponsibilitiesToUser and run value is :"+data.get("Run") );
             ExtentTest childTest=extent.startTest("Login To SplashBi");
             setChildTest(childTest);
@@ -89,8 +103,10 @@ public class ERPMapping extends TestSetup {
             ExtentTest childTest2 = extent.startTest("Add Roles-Responsibility to User");
             setChildTest(childTest2);
             erpmap.navigateToOracleEBusinessSuite();
-            erpmap.addResponsibilityToUser(data.get("splashBi_empname"));
-            assertTrue(erpmap.isResponsibilityAdded(data.get("splashBi_empname")));
+            //erpmap.addResponsibilityToUser(empName);
+            erpmap.addResponsibilityToUser(empName);
+            assertTrue(erpmap.isResponsibilityAdded(empName));
+
             logger.info("Testcase addSResponsibilitiesToUser completed");
 
         } catch(Exception e){

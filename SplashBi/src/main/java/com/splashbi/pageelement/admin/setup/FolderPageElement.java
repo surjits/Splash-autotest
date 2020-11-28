@@ -16,6 +16,7 @@ public enum FolderPageElement implements InitPageElement {
     FOPLDER_NAME_FIELD(getValueFromPropFile("foldername_field")),
     BUSINESS_APP_LIST(getValueFromPropFile("business_app_list")),
     SAVE_FOLDER(getValueFromPropFile("save_folder")),
+    BUSINESS_APP_NAME_LIST(getValueFromPropFile("business_app_name_list")),
     WARNING_POPUP(getValueFromPropFile("warning_popup"));
 
     private String loc;

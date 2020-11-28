@@ -10,6 +10,7 @@ public enum ReportPageElement implements InitPageElement{
 	
 	CREATE_DROPDOWN(getValueFromPropFile("create_dropdown_button")),
 	VERIFY_DOMAINS_HEADER(getValueFromPropFile("verify_domains_header")),
+	VERIFY_COLUMN_PROPERTIES_WINDOW(getValueFromPropFile("verify_column_properties_window")),
 	VERIFY_ALL_OMAINS_TABLE(getValueFromPropFile("verify_all_domains_table")),
 	CREATE_REPORT(getValueFromPropFile("create_report_button")),
 	/*********************ReposrtSet Creation******************/
@@ -29,6 +30,7 @@ public enum ReportPageElement implements InitPageElement{
 	MOVE_TO_RIGHT(getValueFromPropFile("move_to_right")),
 	ENTER_REPORT_NAME(getValueFromPropFile("input_report_name")),
 	ERROR_POPUP(getValueFromPropFile("error_popup")),
+	SELECT_ALL_REPORT_COLS(getValueFromPropFile("select_all_report_cols")),
 	OK_IN_ERROR_POPUP(getValueFromPropFile("ok_in_error_popup")),
 	SAVE_REPORT(getValueFromPropFile("save_report")),
 	SAVE_REPORT_NAME(getValueFromPropFile("save_reportname")),

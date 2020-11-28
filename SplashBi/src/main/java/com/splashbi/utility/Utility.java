@@ -1,10 +1,6 @@
 package com.splashbi.utility;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.Hashtable;
 import java.util.Properties;
 import java.util.Random;
@@ -32,12 +28,59 @@ public static String getValueFromPropertyFile(String path, String key) {
 				
 		return prop.getProperty(key);
 	}
+	public static String getValueFromDataFile(String key) {
 
+		Properties prop = new Properties();
+		FileInputStream f = null;
+		try {
+			f = new FileInputStream(new File(Constant.DATA_OUTPUT_PATH));
+		}catch(FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		try {
+			prop.load(f);
+		}catch(IOException e) {
+			System.out.println("Not able to load property file");
+		}
+
+		return prop.getProperty(key);
+	}
+	public static void setValueInPropertyFile(String key, String val) throws IOException {
+
+		Properties prop = new Properties();
+
+		FileInputStream f = null;
+		try {
+			f = new FileInputStream(new File(Constant.DATA_OUTPUT_PATH));
+		}catch(FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		try {
+			prop.load(f);
+		}catch(IOException e) {
+			System.out.println("Not able to load property file");
+		}
+		prop.setProperty(key,val);
+		FileOutputStream fout = new FileOutputStream(new File(Constant.DATA_OUTPUT_PATH));
+		prop.store(fout,"updated");
+		fout.close();
+
+		//return prop.getProperty(key);
+	}
+	public static void SetValueInpropfile(String key, String val ) throws IOException {
+	Properties prop = new Properties();
+	prop.setProperty(key,val);
+	File file =new File(Constant.DATA_OUTPUT_PATH);
+	FileOutputStream fout = new FileOutputStream(file);
+	prop.store(fout,"updated");
+	fout.close();
+
+	}
 public static String getRandomNumber(String prefix)
 {
 	Random random = new Random();
 	String staticNum = prefix;
-	int randomNum = random.nextInt(899) + 100;
+	int randomNum = random.nextInt(90) + 10;
 	String randomValue = Integer.toString(randomNum);
 	String randomNumber = staticNum+randomValue;
 	return randomNumber;
@@ -134,11 +177,18 @@ public Object[][] testDataSet() {
 	return getData(new File("F://Automation//SplashBi//Testdata//smoketest.json"), "TC_DOM_TABLE_FILTERS_014");
 }
 
-public static void main(String args[]) {
-	
-	String val = getValueForKey(new File(Constant.TEST_DATA_JSON),"createUser","Run");
-	System.out.println("value is:"+val);
-	
+public static void main(String args[]) throws IOException {
+
+
+	setValueInPropertyFile("user_name","test");
+	String val1="test";
+	String val2 ="test1";
+	System.out.println("value is" +val1+" "+val2);
+	if(getValueFromPropertyFile(Constant.DATA_OUTPUT_PATH,"user_name").equalsIgnoreCase("")){
+		System.out.println("value not updated");
+	}else{
+		System.out.println("value updated and name="+getValueFromPropertyFile(Constant.DATA_OUTPUT_PATH,"user_name"));
+	}
 }
   
 

@@ -42,7 +42,7 @@ public class LoginPage extends BasePage {
 
 	}
 
-	public void signIn() throws InterruptedException, Exception {
+	public void signIn() throws Exception {
 		try {
 			logger.info("Entering signin page");
 			openUrl(Utility.getValueFromPropertyFile(Constant.CONFIG_PATH,"url"));
@@ -52,7 +52,7 @@ public class LoginPage extends BasePage {
 			inputText(USER_NAME,username);
 			inputText(PASSWORD,password);
 			clickButton(LOGIN);
-			/*if(isElementDisplayed(WARNING)) {
+			/*if(isElementPresent(WARNING)) {
 				test.log(LogStatus.FAIL, "Snapshot Below: " + test.addScreenCapture(addScreenshot()));
 			}else {
 				test.log(LogStatus.PASS, "No Error warning in Login");
@@ -72,7 +72,8 @@ public class LoginPage extends BasePage {
 			inputText(USER_NAME,username);
 			inputText(PASSWORD,password);
 			clickButton(LOGIN);
-			if(isElementDisplayed(VERIFY_CHANGE_PASSWORD_WINDOW)){
+			waitForVisibilityOfElement(VERIFY_CHANGE_PASSWORD);
+			if(isElementDisplayed(VERIFY_CHANGE_PASSWORD)){
 				inputText(CURRENT_PASSWORD,password);
 				inputText(NEW_PASSWORD,newPassword);
 				inputText(CONFIRM_PASSWORD,newPassword);

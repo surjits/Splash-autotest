@@ -29,11 +29,11 @@ public class ExcelUtility {
 	private FormulaEvaluator evaluator = new XSSFFormulaEvaluator((XSSFWorkbook) workbook);
 	private DataFormatter formatter = new DataFormatter();
 	public Logger logger = Logger.getLogger(ExcelUtility.class);
-	String log4j = Constant.LOG4J_PATH;
+	//String log4j = Constant.LOG4J_PATH;
 	
 	public ExcelUtility(String path) {
 		this.filepath = path;
-		PropertyConfigurator.configure(log4j);
+		//PropertyConfigurator.configure(log4j);
 		try {
 			File file = new File(path);
 			FileInputStream fis = new FileInputStream(file);

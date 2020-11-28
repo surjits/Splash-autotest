@@ -4,6 +4,7 @@ import com.relevantcodes.extentreports.ExtentTest;
 import com.relevantcodes.extentreports.LogStatus;
 import com.splashbi.pageobject.BasePage;
 import com.splashbi.pageobject.LoginPage;
+import com.splashbi.utility.Constant;
 import com.splashbi.utility.Utility;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.WebDriver;
@@ -33,6 +34,7 @@ public class UsersPage extends BasePage {
     }
     public boolean isUsersPageOpen(){
         boolean userPage = false;
+        waitForElementToBePresent(USER_HOME_PAGE);
         if(isElementDisplayed(USER_HOME_PAGE)){
             userPage = true;
             test.log(LogStatus.INFO, "Snapshot Below: " + test.addScreenCapture(addScreenshot()));
@@ -45,49 +47,61 @@ public class UsersPage extends BasePage {
         return userPage;
 
     }
-    public boolean isUserCreated() throws Exception{
+    public boolean isUserCreated(String user) throws Exception{
         boolean userCreated = false;
         waitForVisibilityOfElement(USER_HOME_PAGE);
         clickButton(SEARCH_USER);
-        inputText(SEARCH_USER,username);
+        inputText(SEARCH_USER,user);
         hitEnterKey(SEARCH_USER);
-        if(isElementDisplayed(USER_SEARCHED,username)){
+        if(isElementDisplayed(USER_SEARCHED,user)){
             userCreated = true;
+            clickButton(INFO_USER,user);
+            waitForVisibilityOfElement(USER_DETAILS_TAB);
+            waitForVisibilityOfElement(USERNAME_IN_DETAILS_TAB,user);
             test.log(LogStatus.INFO, "Snapshot Below: " + test.addScreenCapture(addScreenshot()));
-            test.log(LogStatus.PASS,"Created User",username +" "+"created successfully");
+            test.log(LogStatus.PASS,"Created User",user +" "+"created successfully");
 
         }else{
             test.log(LogStatus.INFO, "Snapshot Below: " + test.addScreenCapture(addScreenshot()));
-            test.log(LogStatus.FAIL,"User creation failed",username +" "+"not created");
+            test.log(LogStatus.FAIL,"User creation failed",user +" "+"not created");
         }
         return userCreated;
     }
 
-    public void createUser(Hashtable<String, String> input) throws Exception {
+    public String createUser(Hashtable<String, String> input,String first, String last) throws Exception {
+        String user ="";
         clickButton(CREATE_USER);
         waitForVisibilityOfElement(CREATE_USER_PAGE);
-        fillUserBasicDetails(input);
+        user=fillUserBasicDetails(input,first, last);
         clickButton(SAVE_NEXT);
+       /* if(isElementDisplayed(DISMISS_SUCCESS)){
+            clickButton(DISMISS_SUCCESS);
+        }*/
+        waitForInvisibilityOfLoader();
         waitForVisibilityOfElement(SUCCESS_MESSAGE);
+        wait(2);
         fillUserSettings(input);
         clickButton(SAVE_NEXT_USER_EDIT);
+        waitForInvisibilityOfLoader();
         waitForVisibilityOfElement(SUCCESS_MESSAGE);
         waitAndClick(SAVE_USER_GROUP);
         waitForInvisibilityOfLoader();
-        waitForVisibilityOfElement(SUCCESS_MESSAGE);
-
+        waitForInvisibilityOfSuccessPopup();
+        return user;
     }
-    public void fillUserBasicDetails(Hashtable<String, String> input) throws Exception{
-        username = Utility.getRandomNumber("DPUSER");
+    public String fillUserBasicDetails(Hashtable<String, String> input,String firstname, String lastname) throws Exception{
+        username=Utility.getRandomNumber(Utility.getValueFromPropertyFile(Constant.CONFIG_PATH,"username"));
         inputText(USER_NAME,username);
         clickButton(USER_AUTHENTICATION_LIST);
         waitAndClick(USER_AUTHENTICATION_METHOD,input.get("authentication_method"));
         clickButton(LETME_CREATE_PASSWORD);
+        waitForElementToBePresent(ENTER_PASSWORD);
         clickButton(SEND_EMAIL);
         inputText(ENTER_PASSWORD,input.get("password"));
-        inputText(FIRST_NAME,input.get("first_name"));
-        inputText(LAST_NAME,input.get("last_name"));
+        inputText(FIRST_NAME,firstname);
+        inputText(LAST_NAME,lastname);
         inputText(EMAIL_ADDRESS,input.get("email"));
+        return username;
 
     }
     public void fillUserSettings(Hashtable<String, String> input) throws Exception{

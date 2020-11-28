@@ -1,4 +1,5 @@
 {
+
 	"createMultipleFilter": [
 		{
 
@@ -34,11 +35,22 @@
 		}
 
 	],
+	"createOracleEBSDomainWithMultiTable": [
+		{
+			"Run": "Yes",
+			"bussinessApp": "Splash Samples",
+			"dbconnector": "Oracle EBS",
+			"tablenames":"HRFG_PAYROLLS,HRFV_PAYROLLS"
+
+		}
+
+	],
+
 	"shareDomainWithAnUser": [
 		{
 			"Run": "Yes",
-			"domainName": "AUTODOM11",
-			"user_name":"DPUSER145",
+			"domainName": "DOM_87",
+			"user_name":"TEST_87",
 			"password": "1111",
 			"new_password": "7890"
 
@@ -48,7 +60,7 @@
 	"createReport": [
 		{
 			"Run": "Yes",
-			"domainName": "TESTDOM99",
+			"domainName": "DOM_87",
 			"tablename":"Ms_Products"
 
 		}
@@ -72,10 +84,18 @@
 		}
 
 	],
+	"createDashboard": [
+		{
+			"Run": "Yes",
+			"chartName": "Test110",
+			"businessapp": "Splash Samples"
+		}
+
+	],
 	"createJoinForDomainTable": [
 		{
 			"Run": "Yes",
-			"domainName": "AUTODOM11",
+			"domainName": "DOM_87",
 			"tablename":"Ms Products"
 
 		}
@@ -84,7 +104,7 @@
 	"checkConnectionStatus": [
 		{
 			"Run": "Yes",
-			"connector": "oracleEBS"
+			"connector": "Oracle EBS"
 
 		}
 
@@ -92,14 +112,30 @@
 	"shareConnectorWithUser": [
 		{
 			"Run": "Yes",
-			"connector": "sanconn11",
-			"user_name": "Santest11"
+			"connector": "TEST_CON11",
+			"user_name": "TEST_20"
+
+		}
+
+	],
+	"createSplashDBConnector": [
+		{
+			"Run": "No",
+			"connector_type": "Oracle",
+			"system_type": "Oracle E-Business Suite",
+			"connection_type": "Manual",
+			"hostname": "192.168.8.233",
+			"sid": "ebs19c",
+			"connection_user": "apps",
+			"connection_password": "apps",
+			"port_number": "1521",
+			"schema_name": "testdb"
 
 		}
 
 	],
 
-	"createDBConnector": [
+	"createOracleDBConnector": [
 		{
 			"Run": "Yes",
 			"connector_type": "Oracle",
@@ -132,9 +168,9 @@
 	"createUserMapping": [
 		{
 			"Run": "Yes",
-			"splashBi_empname": "Auto Test",
-			"ebs_connection": "auto-connector",
-			"authentication_method": "Native"
+		    "authentication_method": "Native",
+			"connector": "TEST_CON11",
+			"splashBi_empname": "TEST 87"
 
 		}
 
@@ -142,7 +178,7 @@
 	"importOracleEBSResponsibilities": [
 		{
 			"Run": "Yes",
-			"ebs_connection": "auto-connector",
+			"connectorName": "TEST_CON11",
 			"responsibility": "1Sync Super User,Standard"
 
 		}
@@ -151,7 +187,7 @@
 	"addSResponsibilitiesToUser": [
 		{
 			"Run": "Yes",
-			"splashBi_empname": "Test me"
+			"splashBi_empname": "TEST 87"
 		}
 
 	],
@@ -188,9 +224,9 @@
 		{
 			"Run": "Yes",
 			"authentication_method": "Native",
-			"password": "test",
-			"first_name": "Auto",
-			"last_name": "Test",
+			"password": "1111",
+			"first_name": "AT",
+			"last_name": "AT",
 			"email": "test@test.com",
 
 			"create_privilege": "yes",

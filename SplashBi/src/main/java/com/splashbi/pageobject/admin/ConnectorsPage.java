@@ -2,6 +2,7 @@ package com.splashbi.pageobject.admin;
 import com.relevantcodes.extentreports.ExtentTest;
 import com.relevantcodes.extentreports.LogStatus;
 import com.splashbi.pageobject.BasePage;
+import com.splashbi.utility.Constant;
 import com.splashbi.utility.Utility;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.WebDriver;
@@ -24,16 +25,19 @@ public class ConnectorsPage extends BasePage {
         this.setExtentTest(test);
 
     }
-    public boolean checkConnection(String connector) throws Exception{
+    public boolean checkConnection(String connector_name) throws Exception{
         boolean connectionStatus = false;
-        switch(connector){
-            case "oracleEBS":
-                clickButton(ORACLE_EBS_INFO);
-                break;
+        waitForVisibilityOfElement(SEARCH_CONNECTOR);
+        inputText(SEARCH_CONNECTOR,connector_name);
+        hitEnterKey(SEARCH_CONNECTOR);
+        if(isElementDisplayed(CONNECTOR,connector_name)){
+            clickButton(INFO_CONNECTOR);
+            waitForVisibilityOfElement(CREATED_CONNECTOR_IMAGE);
         }
         try {
             waitAndClick(TEST_CONNECTOR);
             waitForVisibilityOfElement(CONNECTOR_VALIDATE);
+            test.log(LogStatus.PASS, "Checked status");
         }catch(Exception e){
             logger.error("Connection status not validated",e);
             test.log(LogStatus.FAIL,"Connection can not be validated");
@@ -77,17 +81,28 @@ public class ConnectorsPage extends BasePage {
     }
 
     /******* Create a New DB Connector *************/
-    public String createDBConnector(Hashtable<String, String> data) throws Exception{
-        String connector_name = Utility.getRandomNumber("AUTOCONNECT");
-        clickButton(CREATE_CONNECTORS);
-        if(isElementDisplayed(DB_CONNECTORS_HEADER)){
-            clickButton(DB_CONNECTOR_TYPE,data.get("connector_type"));
-            waitForVisibilityOfElement(VERIFY_CREATE_CONNECTOR);
-            fillDBConnectorDetails(connector_name,data);
+    public String createDBConnector(Hashtable<String, String> data) {
+        String connector_name = Utility.getRandomNumber(Utility.getValueFromPropertyFile(Constant.CONFIG_PATH,"connectorname"));
+        try {
+
+            clickButton(CREATE_CONNECTORS);
+            if (isElementDisplayed(DB_CONNECTORS_HEADER)) {
+                clickButton(DB_CONNECTOR_TYPE, data.get("connector_type"));
+                waitForVisibilityOfElement(VERIFY_CREATE_CONNECTOR);
+                fillDBConnectorDetails(connector_name, data);
+            }
+            clickButton(CREATE_CONNECTOR_TEST);
+            waitForInvisibilityOfLoader();
+            waitForVisibilityOfSuccessMessage();
+            waitForInvisibilityOfSuccessPopup();
+            clickButton(CREATE_CONNECTOR_SAVE);
+            waitForInvisibilityOfLoader();
+            waitForVisibilityOfSuccessMessage();
+            waitForVisibilityOfElement(CONNECTOR_HOME);
+        }catch(Exception e){
+            test.log(LogStatus.INFO, "Snapshot Below: " + test.addScreenCapture(addScreenshot()));
+            test.log(LogStatus.FAIL,"Connector creation failed",printError(e,3));
         }
-        clickButton(CREATE_CONNECTOR_TEST);
-        clickButton(CREATE_CONNECTOR_SAVE);
-        waitForVisibilityOfElement(CONNECTOR_HOME);
         return connector_name;
     }
     public boolean isConnectorCreated(String connector_name) throws Exception{
@@ -104,24 +119,33 @@ public class ConnectorsPage extends BasePage {
         }
         return true;
     }
-    public void fillDBConnectorDetails(String connector_name,Hashtable<String, String> data) throws Exception{
-        inputText(CONNECTOR_NAME,connector_name);
-        clickButton(SYSTEM_TYPE_LIST);
-        clickButton(SYSTEM_TYPE,data.get("system_type"));
-        clickButton(CONNECTION_TYPE_LIST);
-        clickButton(CONNECTION_TYPE,data.get("connection_type"));
-        inputText(HOST_NAME,data.get("hostname"));
-        inputText(SID,data.get("sid"));
-        inputText(CONNECTION_USER,data.get("connection_user"));
-        inputText(CONNECTION_PASSWORD,data.get("connection_password"));
-        inputText(PORT_NUMBER,data.get("port_number"));
-        inputText(SCHEMA_NAME,data.get("schema_name"));
+    public void fillDBConnectorDetails(String connector_name,Hashtable<String, String> data) {
+        try {
+            inputText(CONNECTOR_NAME, connector_name);
+            clickButton(SYSTEM_TYPE_LIST);
+            selectItemFromAlist(SYSTEM_ITEM_LIST, data.get("system_type"));
+            //clickButton(SYSTEM_TYPE,data.get("system_type"));
+            if(!getTextValue(CONNECTION_TYPE_VALUE).equalsIgnoreCase(data.get("connection_type"))){
+                clickButton(CONNECTION_TYPE_LIST);
+                clickButton(CONNECTION_TYPE, data.get("connection_type"));
+            }
+            inputText(HOST_NAME, data.get("hostname"));
+            inputText(SID, data.get("sid"));
+            inputText(CONNECTION_USER, data.get("connection_user"));
+            inputText(CONNECTION_PASSWORD, data.get("connection_password"));
+            inputText(PORT_NUMBER, data.get("port_number"));
+            inputText(SCHEMA_NAME, data.get("schema_name"));
+        }catch(Exception e){
+            test.log(LogStatus.INFO, "Snapshot Below: " + test.addScreenCapture(addScreenshot()));
+            test.log(LogStatus.FAIL,"Connector creation failed",printError(e,2));
+        }
     }
     public void testConnectorAndSave() throws Exception{
         clickButton(CREATE_CONNECTOR_TEST);
         clickButton(CREATE_CONNECTOR_SAVE);
     }
     public void shareConnectionWithUser(String connector_name, String username) throws Exception{
+        waitForVisibilityOfElement(CONNECTOR_HOME);
         inputText(SEARCH_CONNECTOR,connector_name);
         hitEnterKey(SEARCH_CONNECTOR);
         clickButton(CONNECTION_ACTION_LIST);

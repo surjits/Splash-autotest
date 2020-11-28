@@ -6,6 +6,7 @@
 	<groupId>com.splashbi</groupId>
 	<artifactId>SplashBi</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
 
 	<name>SplashBi</name>
 	<!-- FIXME change it to the project's website -->
@@ -93,6 +94,7 @@
 	</dependencies>
 
 	<build>
+		<!--<sourceDirectory>${basedir}/src</sourceDirectory>-->
 		<pluginManagement>
 
 			<plugins>

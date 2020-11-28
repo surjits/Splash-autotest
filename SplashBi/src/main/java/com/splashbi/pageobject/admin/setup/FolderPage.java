@@ -41,8 +41,12 @@ public class FolderPage extends BasePage {
         waitForInvisibilityOfLoader();
         waitForVisibilityOfElement(CREATE_FOLDER_PAGE);
         inputText(FOPLDER_NAME_FIELD,folder_name);
+        wait(1);
         clickButton(BUSINESS_APP_LIST);
-        waitAndClick(BUSINESS_APP_NAME,businessApp);
+        selectItemFromAlist(BUSINESS_APP_NAME_LIST,businessApp);
+       // selectFirstItemFromList(BUSINESS_APP_NAME_LIST);
+
+       waitAndClick(BUSINESS_APP_NAME,businessApp);
         clickButton(SAVE_FOLDER);
         waitForInvisibilityOfLoader();
         waitForVisibilityOfSuccessMessage();

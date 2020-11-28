@@ -8,6 +8,7 @@ import org.openqa.selenium.Alert;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
+import static com.splashbi.pageelement.DomainPageElement.LIST_OF_BUSINESSAPPS;
 import static com.splashbi.pageelement.DynamicPageElement.*;
 import static com.splashbi.pageelement.admin.ERPMappingPageElement.*;
 
@@ -40,29 +41,39 @@ public class ERPMappingPage extends BasePage {
         }
         return isnavigated;
     }
-    public void createERPMapping(String splashBi_empname, String ebs_connection,String authmethod) throws Exception{
-        clickButton(CREATE_ERP_MAPPING);
-        waitForVisibilityOfElement(CREATE_ERP_MAPPING_HOME);
-        clickButton(SPLASHBI_EMP_NAME_LIST);
-        clickButton(SPLASHBI_EMP_NAME,splashBi_empname);
-        clickButton(EBS_CONNECTION_LIST);
-        clickButton(EBS_CONNECTION_NAME,ebs_connection);
-        clickButton(AUTHENTICATION_METHOD_LIST);
-        clickButton(USER_AUTHENTICATION_METHOD,authmethod);
-        clickButton(SELECT_USER_MAPPING);
-        waitAndClick(SEARCH_EBS_USER);
-        wait(2);
-        waitForInvisibilityOfLoader();
-        waitForVisibilityOfElement(SEARCH_AND_SELECT_EBS_USER_WINDOW);
-        selectFirstItemFromList(EBS_USER_LIST);
-        clickButton(SAVE_ERP_MAPPING);
+    public void createERPMapping(String splashBi_empname, String ebs_connection,String authmethod) {
+        try {
+
+            clickButton(CREATE_ERP_MAPPING);
+            waitForInvisibilityOfLoader();
+            waitForVisibilityOfElement(CREATE_ERP_MAPPING_HOME);
+            waitForVisibilityOfElement(SPLASHBI_EMP_NAME_DROPDOWN);
+            clickButton(SPLASHBI_EMP_NAME_DROPDOWN);
+            selectItemFromAlist(LIST_FOR_SPLASHBI_EMP_NAME,splashBi_empname);
+            clickButton(EBS_CONNECTION_DROPDOWN);
+            selectItemFromAlist(LIST_OF_EBS_CONNECTIONS,ebs_connection);
+            clickButton(AUTHENTICATION_METHOD_DROPDOWN);
+            selectItemFromAlist(LIST_OF_AUTHENTICATION_METHODS,authmethod);
+            clickButton(SELECT_USER_MAPPING);
+            waitAndClick(SEARCH_EBS_USER);
+            wait(2);
+            waitForInvisibilityOfLoader();
+            waitForVisibilityOfElement(SEARCH_AND_SELECT_EBS_USER_WINDOW);
+            selectFirstItemFromList(EBS_USER_LIST);
+            clickButton(SAVE_ERP_MAPPING);
+            waitForVisibilityOfElement(ORACLE_EBUSINESS_SUIT_HOME);
+            wait(1);
+        }catch(Exception e){
+            test.log(LogStatus.FAIL,"Failed to create ERP mapping", printError(e,3));
+            logger.error("Failed to navigate to Oracle E Business suite",e);
+        }
     }
     public void navigateToOracleEBusinessSuite(){
         try {
             waitAndClick(ORACLE_EBUSINESS_SUIT);
             waitForInvisibilityOfLoader();
             waitForVisibilityOfElement(ORACLE_EBUSINESS_SUIT_HOME);
-            wait(3);
+          //  wait(1);
         }catch(Exception e){
             test.log(LogStatus.FAIL,"Failed to navigate to Oracle E Business suite");
             logger.error("Failed to navigate to Oracle E Business suite",e);
@@ -112,11 +123,8 @@ public class ERPMappingPage extends BasePage {
         }
         return isPresent;
     }
-    public boolean verifyMapping(String splashBi_empname ) throws Exception{
+    public boolean verifyUserMapping(String splashBi_empname ) throws Exception{
         boolean isPresent = false;
-        waitForVisibilityOfElement(ORACLE_EBUSINESS_SUIT_HOME);
-        wait(1);
-        clickButton(SEARCH_USER_MAPPING);
         inputText(SEARCH_USER_MAPPING, splashBi_empname);
         hitEnterKey(SEARCH_USER_MAPPING);
         if (isElementDisplayed(USER_SEARCHED_IN_USER_MAPPING,splashBi_empname)) {
@@ -142,7 +150,7 @@ public class ERPMappingPage extends BasePage {
                 clickButton(ADD_USER_TO_RESONSIBILITY_CHECKBOX);
                 inputText(SEARCH_RESPONSIBILITY, responsibility);
                 hitEnterKey(SEARCH_RESPONSIBILITY);
-                clickButton(FIRST_AVAILABLE_ROLE_RESPONSIBILITY_TO_IMPORT);
+                waitAndClick(FIRST_AVAILABLE_ROLE_RESPONSIBILITY_TO_IMPORT);
                 clickButton(MOVE_TO_RIGHT_ARROW);
                 waitForInvisibilityOfLoader();
                 waitForVisibilityOfElement(VERIFY_FIRSTROW_IN_SELECTED_ROLE);
@@ -166,8 +174,6 @@ public class ERPMappingPage extends BasePage {
                 waitForInvisibilityOfLoader();
                 waitForVisibilityOfElement(ROLES_RESPONSIBILITY_WINDOW);
                 test.log(LogStatus.INFO, "Snapshot Before adding responsibility: " + test.addScreenCapture(addScreenshot()));
-
-
             }
             clickButton(FIRST_AVAILABLE_ROLE_RESPONSIBILITY_TO_ADD);
             clickButton(RIGHT_ARROW_TO_MOVE);

@@ -1,7 +1,9 @@
 package com.splashbi.pageobject;
 
+import com.splashbi.utility.Constant;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 
 import static com.splashbi.pageelement.LandingPageElement.HOME;
@@ -10,6 +12,8 @@ import static com.splashbi.pageelement.DomainPageElement.*;
 
 import java.io.IOException;
 import java.util.Hashtable;
+import java.util.List;
+
 import com.relevantcodes.extentreports.ExtentTest;
 import com.relevantcodes.extentreports.LogStatus;
 import com.splashbi.utility.Utility;
@@ -28,35 +32,45 @@ public class DomainPage extends BasePage {
 		this.setExtentTest(test);
 
 	}
+	public void searchTableInViews(String tablename) throws Exception{
+		clickButton(VIEWS_CHECKBOX);
+		waitForInvisibilityOfLoader();
+		inputText(TABLE_SEARCH_BOX,tablename);
+		clickButton(TABLE_SEARCH_ICON);
+		waitForInvisibilityOfLoader();
+	}
 
-	public String createDomainWithNewFolder(String businessapp, String dbconnector) throws Exception {
+	public void createDomainWithNewFolder(String domain,String businessapp, String dbconnector) throws Exception {
 		try {
 			System.out.println("business app= "+businessapp);
 			logger.info("Entering createDomainWithNewFolder method");
 			waitAndClick(CREATE_DOMAIN);
-			domainName=Utility.getRandomNumber("ATDOM");
-			inputText(DOMAIN_NAME,domainName);
+
+			inputText(DOMAIN_NAME,domain);
 			clickButton(BUSINESS_APP_LIST);
-			waitAndClick(BUSINESS_APP_NAME,businessapp);
+		    selectItemFromAlist(LIST_OF_BUSINESSAPPS,businessapp);
 			clickButton(CREATE_FOLDER_CHECKBOX);
 			clickButton(CREATE_FOLDER);
-			String folderName=Utility.getRandomNumber("AT");
-			logger.info("Folder name is: "+folderName);
-			inputText(FOLDER_NAME,folderName);
+			String foldername = Utility.getRandomNumber(Utility.getValueFromPropertyFile(Constant.CONFIG_PATH,"foldername"));
+			logger.info("Folder name is: "+foldername);
+			inputText(FOLDER_NAME,foldername);
 			clickButton(DB_CONNECTOR_LIST);
-			waitAndClick(DB_CONNECTOR,dbconnector);
+		    selectItemFromAlist(CONNECTOR_LIST,dbconnector);
 			clickButton(SAVE_BUTTON);
 			waitForInvisibilityOfLoader();
+
 
 		}catch(Exception e) {
 			e.printStackTrace();
 			test.log(LogStatus.FAIL, "Domain creation failed");
+			test.log(LogStatus.ERROR,printError(e,3));
 			logger.error(e);
 			throw e;
 		}
-		return domainName;
+
 	}
 	public boolean isDomainTabOpen(String domainName ){
+		waitForVisibilityOfElement(CREATED_DOMAIN_TAB,domainName);
 		if(isElementDisplayed(CREATED_DOMAIN_TAB,domainName)) {
 			return true;
 		}
@@ -66,12 +80,16 @@ public class DomainPage extends BasePage {
 			return false;
 		}
 	}
+	public void searchDomain(String domainName){
+		if(isElementPresent(SEARCH_DOMAIN)){
+			inputText(SEARCH_DOMAIN,domainName);
+			hitEnterKey(SEARCH_DOMAIN);
+		}
+	}
 
 	public boolean isDomainPresent(String domainName) throws Exception {
 		boolean created = false;
-		waitForVisibilityOfElement(SEARCH_DOMAIN);
-		inputText(SEARCH_DOMAIN,domainName);
-		hitEnterKey(SEARCH_DOMAIN);
+		searchDomain(domainName);
 		if(isElementDisplayed(SEARCHED_DOMAIN,domainName)) {
 			created = true;
 			System.out.println("Domain created successfully");
@@ -122,11 +140,18 @@ public class DomainPage extends BasePage {
 	}
 	public void addTablesToDomain(String []tables) throws Exception {
 		System.out.println(" in addTableToDomain");
+		clickButton(VIEWS_CHECKBOX);
+		waitForInvisibilityOfLoader();
 		for(int i = 0; i< tables.length;i++) {
 			System.out.println(tables[i]);
 			try {
+
 				inputText(TABLE_SEARCH_BOX, tables[i]);
 				wait(1);
+				clickButton(TABLE_SEARCH_ICON);
+				waitForInvisibilityOfLoader();
+				waitForVisibilityOfElement(TABLE_TO_DRAG, tables[i].toUpperCase());
+				//wait(1);
 				dragAndDrop(TABLE_TO_DRAG, tables[i].toUpperCase(), TABLE_DROP_LOC);
 				waitForInvisibilityOfLoader();
 				waitForVisibilityOfElement(DOMAIN_TABLE, tables[i].toUpperCase());
@@ -219,13 +244,14 @@ public class DomainPage extends BasePage {
 	}
 
 	public void createJoinForTable(String domainName,String table) throws Exception{
-		//inputText(SEARCH_DOMAIN,domainName);
-		//waitForVisibilityOfElement(DOMAIN_NAME_BUTTON,domainName);
 		try {
 			clickButton(EDIT_DOMAIN,domainName);
 			waitForInvisibilityOfLoader();
 			waitForVisibilityOfElement(CREATED_DOMAIN_TAB, domainName);
 			clickButton(EDIT_DOMAIN_TABLE, table);
+			if(isElementDisplayed(EDIT_DOMAIN_TABLE, table)){
+				clickButton(EDIT_DOMAIN_TABLE, table);
+			}
 			waitAndClick(JOIN_TAB, domainName);
 			waitAndClick(SGGESTED_JOINS, domainName);
 			waitForInvisibilityOfLoader();
@@ -237,9 +263,9 @@ public class DomainPage extends BasePage {
 			clickButton(LOAD_JOINS);
 			wait(1);
 			clickButton(REVERSE_JOIN);
-			clickButton(TABLE_JOIN_SAVE,domainName);
+			clickButton(SAVE_JOIN);
+			clickButton(SAVE_TABLE);
 			//wait(1);
-			waitForVisibilityOfSuccessMessage();
 			test.log(LogStatus.INFO, test.addScreenCapture(addScreenshot()));
 			test.log(LogStatus.PASS,"Domain Table joined successfully");
 		}catch(Exception e){

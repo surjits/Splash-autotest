@@ -6,7 +6,7 @@ import com.splashbi.utility.Constant;
 import com.splashbi.utility.Utility;
 
 public enum LandingPageElement implements InitPageElement {
-    HOME(getValueFromPropFile("homeLink")),
+    HOME(getValueFromPropFile("home_Link")),
     REPORT(getValueFromPropFile("reportLink")),
     DOMAIN(getValueFromPropFile("domainLink")),
     ADMINISTRATOR(getValueFromPropFile("administratorLink")),

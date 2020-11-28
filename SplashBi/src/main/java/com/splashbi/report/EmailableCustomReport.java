@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.splashbi.listener.ReExecuteFailedCase;
+import com.splashbi.listener.RetryListener;
 import org.testng.IReporter;
 import org.testng.IResultMap;
 import org.testng.ISuite;
@@ -97,7 +99,7 @@ public class EmailableCustomReport implements IReporter {
 	}
 
 	// Build test suite summary data.
-	@SuppressWarnings("finally")
+
 	private String getTestSuiteSummary(List<ISuite> suites) {
 		StringBuffer retBuf = new StringBuffer();
 		try {
@@ -121,7 +123,8 @@ public class EmailableCustomReport implements IReporter {
 					totalTestPassed = testObj.getPassedTests().getAllMethods().size();
 					totalTestSkipped = testObj.getSkippedTests().getAllMethods().size();
 					totalTestFailed = testObj.getFailedTests().getAllMethods().size();
-					//totalTestRetried=retryCount;
+				    totalTestRetried= ReExecuteFailedCase.retryCount;
+
 					totalTestCount = (totalTestPassed + totalTestSkipped + totalTestFailed)-totalTestRetried;
 
 					// Test name.
@@ -214,6 +217,14 @@ public class EmailableCustomReport implements IReporter {
 		retBuf.append(df.format(date));
 		return retBuf.toString();
 	}
+	public String getRetriedMethods(ITestResult result){
+		String name="";
+		if(result.getAttribute("retried").toString().equals("true")){
+			name= result.getMethod().toString();
+			System.out.println("Retied method is:"+name.toString());
+		}
+		return name;
+	}
 
 	// Convert long type deltaTime to format hh:mm:ss:mi.
 	private String convertDeltaTimeToString(long deltaTime) {
@@ -228,7 +239,7 @@ public class EmailableCustomReport implements IReporter {
 	}
 
 	// Get test method summary info.
-	@SuppressWarnings("finally")
+
 	private String getTestMehodSummary(List<ISuite> suites) {
 		StringBuffer retBuf = new StringBuffer();
 		try {
@@ -254,6 +265,7 @@ public class EmailableCustomReport implements IReporter {
 					IResultMap testPassedResult = testObj.getPassedTests();
 					String passedTestMethodInfo = this.getTestMethodReport(testName, testPassedResult, true, false);
 					retBuf.append(passedTestMethodInfo);
+
 				}
 			}
 		} catch (Exception ex) {

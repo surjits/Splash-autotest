@@ -4,6 +4,7 @@ import com.relevantcodes.extentreports.ExtentTest;
 import com.relevantcodes.extentreports.LogStatus;
 import com.splashbi.pageobject.BasePage;
 import com.splashbi.pageobject.admin.UsersPage;
+import com.splashbi.utility.Constant;
 import com.splashbi.utility.Utility;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.WebDriver;
@@ -38,6 +39,7 @@ public class BusinessAppPage extends BasePage {
     }
     public String createBusinessApplication() throws Exception{
         businessapp_name = Utility.getRandomNumber("DPBUSINESSAPP");
+        businessapp_name=Utility.getRandomNumber(Utility.getValueFromPropertyFile(Constant.CONFIG_PATH,"businessapp"));
         clickButton(CREATE_BUSINESS_APP);
         waitForVisibilityOfElement(CREATE_BUSINESS_APP_HOME);
         inputText(BUSINESS_APP_NAME_FIELD,businessapp_name);

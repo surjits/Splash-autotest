@@ -1,9 +1,10 @@
 package com.splashbi.report;
 
+import com.splashbi.setup.TestSetup;
 import org.apache.log4j.Logger;
 
-public class Log4j {
-	private static Logger Log = Logger.getLogger(Logger.class.getName());
+public class Log4j extends TestSetup {
+	private static Logger Log = Logger.getLogger(Log4j.class);
 	//Log = Logger.getLogger(“devpinoyLogger”);
 	public static void info(String message) {
 		 

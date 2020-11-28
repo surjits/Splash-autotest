@@ -58,7 +58,7 @@ public class ExecutionReport {
 			retBuf.append("<tr>");
 			// Test name.
 			retBuf.append("<td>");
-			retBuf.append("Regression Test");
+			retBuf.append("Pre-Sanity Test");
 			retBuf.append("</td>");
 
 			// Total method count.
@@ -101,8 +101,11 @@ public class ExecutionReport {
 			retBuf.append("</td>");
 
 			// Execute Time
-			long deltaTime = endDate.getTime() - startDate.getTime();
+			//long deltaTime = endDate.getTime() - startDate.getTime();
+			long deltaTime = findDifference(startDate.toString(),endDate.toString());
+			System.out.println("Time diff is"+deltaTime);
 			String deltaTimeStr = this.convertDeltaTimeToString(deltaTime);
+			System.out.println("Time diff is"+deltaTimeStr.toString());
 			retBuf.append("<td>");
 			retBuf.append(deltaTimeStr);
 			retBuf.append("</td>");
@@ -121,8 +124,26 @@ public class ExecutionReport {
 		retBuf.append(title + " " + this.getDateInStringFormat(new Date()));
 		return retBuf.toString();
 	}
+	public static long 	findDifference(String start_date, String end_date) {
+       long difference_In_Time=0;
+		// SimpleDateFormat converts the
+		// string format to date object
+		SimpleDateFormat sdf
+				= new SimpleDateFormat(
+				"dd-MM-yyyy HH:mm:ss");
 
-	private String getDateInStringFormat(Date date) {
+		try {
+
+			Date d1 = sdf.parse(start_date);
+			Date d2 = sdf.parse(end_date);
+
+			difference_In_Time = d2.getTime() - d1.getTime();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return difference_In_Time;
+	}
+		private String getDateInStringFormat(Date date) {
 		StringBuffer retBuf = new StringBuffer();
 		if (date == null) {
 			date = new Date();

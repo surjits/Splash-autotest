@@ -22,24 +22,25 @@ public class Settings extends TestSetup {
             setChildTest(childTest);
             login.signIn();
             assertTrue(home.verifyHomePage(),"Failed to login to application");
+            endChildTest(childTest);
             //Check Connection
             ExtentTest childTest1 = extent.startTest("Navigate to Settings Page");
             setChildTest(childTest1);
             home.navigateToAdminPage();
             admin.navigateToSettingsPage();
             assertTrue(setting.isSettingsPageOpen(),"Failed to navigate to Settings Page");
-
+            endChildTest(childTest1);
             ExtentTest childTest2= extent.startTest("Set User Group Creation settings");
             setChildTest(childTest2);
             assertTrue(setting.isUserGroupCreationSiteSet(data.get("site_option")),"Setting not Set");
-
+            endChildTest(childTest2);
         } catch(Exception e){
             test.log(LogStatus.FAIL, "Test Failed");
             logger.error("Test case setUserGroupCreationSiteinSettings Failed",e);
             Assert.fail();
         }
     }
-    @Test(dataProvider = "LoadData")
+   @Test(dataProvider = "LoadData")
     public void setDashboardListviewSiteInSettings(Hashtable<String, String> data){
         try{
             logger.info("In setDashboardListviewSiteInSettings and run value is :"+data.get("Run") );
@@ -47,17 +48,18 @@ public class Settings extends TestSetup {
             setChildTest(childTest);
             login.signIn();
             assertTrue(home.verifyHomePage(),"Failed to login to application");
+            endChildTest(childTest);
             //Check Connection
             ExtentTest childTest1 = extent.startTest("Navigate to Settings Page");
             setChildTest(childTest1);
             home.navigateToAdminPage();
             admin.navigateToSettingsPage();
             assertTrue(setting.isSettingsPageOpen(),"Failed to navigate to Settings Page");
-
+            endChildTest(childTest1);
             ExtentTest childTest2= extent.startTest("Set Dashboard Listview settings");
             setChildTest(childTest2);
             assertTrue(setting.isDashBoardListViewSiteSet(data.get("site_option")),"Setting not Set");
-
+            endChildTest(childTest2);
         } catch(Exception e){
             test.log(LogStatus.FAIL, "Test Failed");
             logger.error("Test case setDashboardListviewSiteInSettings Failed",e);

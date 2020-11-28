@@ -36,8 +36,11 @@ public class SettingsPage extends BasePage {
     }
     public void setSiteValue(String option) throws Exception{
         clickButton(SITE_TAB);
-        clickButton(SITE_DROPDOWN);
-        clickButton(SETTING_OPTION,option);
+        wait(1);
+        if(!getTextValue(DEFAULT_SETTING).equalsIgnoreCase(option)){
+            clickButton(SITE_DROPDOWN);
+            selectItemFromAlist(SETTING_LIST,option);
+        }
         clickButton(SETTING_SAVE);
     }
     public boolean isUserGroupCreationSiteSet(String option) throws Exception{
@@ -48,7 +51,7 @@ public class SettingsPage extends BasePage {
         waitForVisibilityOfElement(USERGROUP_CREATION_WINDOW);
         setSiteValue(option);
         waitForInvisibilityOfLoader();
-        if(isElementDisplayed(VALIDATE_SUCCESS)){
+        if(getTextValue(DEFAULT_SETTING).equalsIgnoreCase(option)){
             test.log(LogStatus.INFO, "Snapshot Below: " + test.addScreenCapture(addScreenshot()));
             test.log(LogStatus.PASS,"Settings updated successfully");
             return true;
@@ -66,7 +69,7 @@ public class SettingsPage extends BasePage {
         waitForVisibilityOfElement(DASHBOARD_LISTVIEW_DISPLAY_WINDOW);
         setSiteValue(option);
         waitForInvisibilityOfLoader();
-        if(isElementDisplayed(VALIDATE_SUCCESS)){
+        if(getTextValue(DEFAULT_SETTING).equalsIgnoreCase(option)){
             test.log(LogStatus.INFO, "Snapshot Below: " + test.addScreenCapture(addScreenshot()));
             test.log(LogStatus.PASS,"Settings updated successfully");
             return true;

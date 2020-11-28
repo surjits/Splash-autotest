@@ -48,6 +48,9 @@ public class setup extends TestSetup {
     @Test(dataProvider = "LoadData")
     public void createFolder(Hashtable<String, String> data){
         try{
+            if(businessAppName.isEmpty()){
+                businessAppName = data.get("businessapp");
+            }
             logger.info("In createFolder and run value is :"+data.get("Run") );
             ExtentTest childTest=extent.startTest("Login To SplashBi");
             setChildTest(childTest);
@@ -64,7 +67,7 @@ public class setup extends TestSetup {
 
             ExtentTest childTest2= extent.startTest("Create Folder");
             setChildTest(childTest2);
-            String foldername = folder.createFolder(data.get("businessapp"));
+            String foldername = folder.createFolder(businessAppName);
 
             ExtentTest childTest3= extent.startTest("Verfy Created Folder");
             setChildTest(childTest3);
@@ -96,7 +99,7 @@ public class setup extends TestSetup {
 
             ExtentTest childTest2= extent.startTest("Create Business Application");
             setChildTest(childTest2);
-            String businessAppName = businessapp.createBusinessApplication();
+            businessAppName = businessapp.createBusinessApplication();
 
             ExtentTest childTest3= extent.startTest("Verfy Created BusinessApp");
             setChildTest(childTest3);

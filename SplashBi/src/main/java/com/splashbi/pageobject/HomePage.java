@@ -2,6 +2,7 @@ package com.splashbi.pageobject;
 
 import static com.splashbi.pageelement.HomePageElement.*;
 
+import com.splashbi.pageelement.HomePageElement;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 
@@ -23,52 +24,50 @@ public class HomePage  extends BasePage {
 		this.setExtentTest(test);
 		
 	}
-    public void navigateToAdminPage() throws Exception {
+	public void navigateToPage(String pagename){
+    	HomePageElement page=null;
+    	switch(pagename){
+			case "admin":
+					page = ADMINISTRATOR;
+					break;
+			case "domain":
+				page = DOMAIN;
+				break;
+			case "report":
+				page = REPORT;
+				break;
+			case "dashboard":
+				page = DASHBOARD;
+				break;
+		}
 		try {
-			clickButton(ADMINISTRATOR);
+			clickButton(page);
 			waitForInvisibilityOfLoader();
+			while(isElementDisplayed(HOME)) {
+				clickButton(page);
+				waitForInvisibilityOfLoader();
+			}
+			test.log(LogStatus.PASS,"Navigated to page"+" "+pagename);
 			test.log(LogStatus.INFO, "Navigated to Admin Page: ");
 		} catch (Exception e) {
-
+			test.log(LogStatus.ERROR, printError(e,2));
+			test.log(LogStatus.INFO, "Snapshot Below: " + test.addScreenCapture(addScreenshot()));
+			test.log(LogStatus.FAIL,"Failed to navigate to "+" "+pagename);
 		}
+
+	}
+    public void navigateToAdminPage() throws Exception {
+		navigateToPage("admin");
 	}
     public void navigateToDomainPage() {
-    	System.out.println("navigateToDomainPage");
-    	logger.info("Entered navigateToDomainPage method" );
-    	try {
-    		waitAndClick(DOMAIN);
-	    	waitForInvisibilityOfLoader();
-	    	test.log(LogStatus.INFO, "Navigated to domain Page: " );
-    	}catch(Exception e) {
-    		
-    	}
-    	
+		navigateToPage("domain");
     }
 	public void navigateToDashboardPage() throws Exception {
-		logger.info("Entered navigateToDomainPage method" );
-		try {
-			waitAndClick(DASHBOARD);
-			waitForInvisibilityOfLoader();
-			wait(1);
-			test.log(LogStatus.PASS, "Navigated to Report Page: " );
-		}catch(Exception e) {
-			e.printStackTrace();
-			throw e;
-		}
-
+		navigateToPage("dashboard");
 	}
     
     public void navigateToReportPage() throws Exception {
-    	logger.info("Entered navigateToDomainPage method" );
-    	try {
-    		waitAndClick(REPORT);
-	    	waitForInvisibilityOfLoader();
-	    	wait(1);
-	    	test.log(LogStatus.PASS, "Navigated to Report Page: " );
-    	}catch(Exception e) {
-    		throw e;
-    	}
-    	
+		navigateToPage("report");
     }
 
 	public boolean verifyHomePage() throws Exception {

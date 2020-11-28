@@ -7,13 +7,15 @@ import com.splashbi.utility.Constant;
 import com.splashbi.utility.Utility;
 
 public enum HomePageElement implements InitPageElement {
-	    HOME(getValueFromPropFile("homeLink")),
+	    HOME_LINK(getValueFromPropFile("homeLink")),
+	    HOME(getValueFromPropFile("home")),
 	    REPORT(getValueFromPropFile("reportLink")),
 	    DASHBOARD(getValueFromPropFile("dashboardLink")),
 	    DOMAIN(getValueFromPropFile("domainLink")),
 	    ADMINISTRATOR(getValueFromPropFile("administratorLink")),
 	    LOGOUT(getValueFromPropFile("logout")),
 	    VERIFY_LOGOUT(getValueFromPropFile("verify_logout")),
+	    PROFILE_IMAGE(getValueFromPropFile("profile_image")),
 	    EXPAND(getValueFromPropFile("expandLink"));
 		
 		private String loc;

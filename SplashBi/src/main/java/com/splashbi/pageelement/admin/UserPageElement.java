@@ -22,6 +22,7 @@ public enum UserPageElement implements InitPageElement {
     EMAIL_ADDRESS(getValueFromPropFile("email")),
     SAVE_NEXT(getValueFromPropFile("save_next")),
     SUCCESS_MESSAGE(getValueFromPropFile("validate_success")),
+    DISMISS_SUCCESS(getValueFromPropFile("dismiss_success")),
     //User Privuilege option
     CREATE_DOMAIN_PRIVILEGE(getValueFromPropFile("create_domain")),
     CREATE_REPORT_PRIVILEGE(getValueFromPropFile("create_report")),
@@ -51,6 +52,8 @@ public enum UserPageElement implements InitPageElement {
     SAVE_USER_EDIT(getValueFromPropFile("user_edit_save")),
     SAVE_NEXT_USER_EDIT(getValueFromPropFile("user_edit_save_next")),
     SAVE_USER_GROUP(getValueFromPropFile("save_user_group")),
+    USER_DETAILS_TAB(getValueFromPropFile("user_details")),
+
     END(getValueFromPropFile("end"));
     private String loc;
     public String expression;

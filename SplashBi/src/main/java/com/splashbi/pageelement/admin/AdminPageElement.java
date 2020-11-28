@@ -8,6 +8,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 public enum AdminPageElement implements InitPageElement {
+    ADMIN_HOME(getValueFromPropFile("admin_home")),
     CONNECTORS(getValueFromPropFile("connectors")),
     USERS(getValueFromPropFile("users")),
     SETUP(getValueFromPropFile("Setup")),

@@ -1,5 +1,6 @@
 package com.splashbi.pageobject;
 
+import com.splashbi.utility.Constant;
 import org.openqa.selenium.WebDriver;
 
 import com.relevantcodes.extentreports.ExtentTest;
@@ -45,20 +46,21 @@ public class ReportPage extends BasePage {
 	}
 	public String createReport(String domainName,String tablename) throws Exception {
 		try {
-			reportName=Utility.getRandomNumber("ATREP");
+
+			reportName=Utility.getRandomNumber(Utility.getValueFromPropertyFile(Constant.CONFIG_PATH,"reportname"));
 			clickButton(CREATE_DROPDOWN);
 			clickButton(CREATE_REPORT);
+			waitForVisibilityOfElement(DOMAIN_SEARCH_FIELD);
 			waitForVisibilityOfElement(VERIFY_DOMAINS_HEADER);
 			inputText(DOMAIN_SEARCH_FIELD,domainName);
 			hitEnterKey(DOMAIN_SEARCH_FIELD);
 			clickButton(DOMAIN_NAME_IN_REPORT,domainName);
 			waitForVisibilityOfElement(EXPAND_DOMAIN_TABLE,tablename.toUpperCase());
-			clickButton(EXPAND_DOMAIN_TABLE,tablename.toUpperCase());
+			//clickButton(EXPAND_DOMAIN_TABLE,tablename.toUpperCase());
 			clickButton(SELECT_ALL_CHECKBOX,tablename.toUpperCase());
 			clickButton(MOVE_TO_RIGHT);
-			if(isElementPresent(ERROR_POPUP)){
-				clickButton(OK_IN_ERROR_POPUP);
-			}
+			waitForElementToBePresent(VERIFY_COLUMN_PROPERTIES_WINDOW);
+			clickButton(SELECT_ALL_REPORT_COLS);
 			clickButton(SAVE_REPORT);
 			waitForVisibilityOfElement(ENTER_REPORT_NAME);
 			inputText(ENTER_REPORT_NAME,reportName);
@@ -75,8 +77,8 @@ public class ReportPage extends BasePage {
 	}
 
 	public String createReportSet(String businessApp) {
-		String repsetName = Utility.getRandomNumber("ATREPSET");
-		String foldername = Utility.getRandomNumber("ATREPSET");
+		String repsetName = Utility.getRandomNumber(Utility.getValueFromPropertyFile(Constant.CONFIG_PATH,"repsetname"));
+		String foldername = Utility.getRandomNumber(Utility.getValueFromPropertyFile(Constant.CONFIG_PATH,"foldername"));
 		try {
 
 			waitForVisibilityOfElement(CREATE_DROPDOWN);
@@ -84,7 +86,7 @@ public class ReportPage extends BasePage {
 			clickButton(CREATE_REPORT_SET);
 			waitForInvisibilityOfLoader();
 			waitForElementToBePresent(OK_ADD_REPORTS);
-			wait(1);
+			wait(2);
 			List<WebElement> checkbox_list = getWebElementList(REPORTS_CHECKBOX_LIST);
 			selectFirstNItemFromList(REPORTS_CHECKBOX_LIST, 3);
 			List<WebElement> reports = getWebElementList(REPORTS_NAME_LIST);

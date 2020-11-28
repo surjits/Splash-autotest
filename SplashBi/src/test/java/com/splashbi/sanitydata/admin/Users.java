@@ -4,6 +4,8 @@ import com.relevantcodes.extentreports.ExtentTest;
 import com.relevantcodes.extentreports.LogStatus;
 import com.splashbi.pageobject.admin.AdminPage;
 import com.splashbi.setup.TestSetup;
+import com.splashbi.utility.Constant;
+import com.splashbi.utility.Utility;
 import org.apache.log4j.Logger;
 import org.json.JSONException;
 import org.openqa.selenium.WebDriver;
@@ -19,6 +21,7 @@ public class Users extends TestSetup {
 
     @Test(dataProvider = "LoadData")
     public void createUser(Hashtable<String, String> data){
+
         try{
             logger.info("In createUser and run value is :"+data.get("Run") );
             ExtentTest childTest=extent.startTest("Login To SplashBi");
@@ -31,11 +34,10 @@ public class Users extends TestSetup {
             home.navigateToAdminPage();
             admin.navigateToUsersPage();
             assertTrue(users.isUsersPageOpen(),"Failed to navigate to Users Page");
-
             ExtentTest childTest2= extent.startTest("Create User");
             setChildTest(childTest2);
-            users.createUser(data);
-            assertTrue(users.isUserCreated(),"User not Created");
+            userName=users.createUser(data,firstName,lastName);
+            assertTrue(users.isUserCreated(userName),"User not Created");
 
         } catch(Exception e){
             test.log(LogStatus.FAIL, "Test Failed");

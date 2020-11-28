@@ -4,6 +4,7 @@ import com.relevantcodes.extentreports.ExtentTest;
 import com.relevantcodes.extentreports.LogStatus;
 import com.splashbi.pageobject.BasePage;
 import com.splashbi.pageobject.admin.UsersPage;
+import com.splashbi.utility.Constant;
 import com.splashbi.utility.Utility;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.WebDriver;
@@ -30,12 +31,13 @@ public class UserGroupPage extends BasePage {
 
     }
     public String createUserGroup() throws Exception {
-        usergroup_name = Utility.getRandomNumber("DPUSERGRP");
+        usergroup_name =Utility.getRandomNumber(Utility.getValueFromPropertyFile(Constant.CONFIG_PATH,"usergrpname"));
         clickButton(CREATE_USER_GROUP);
         waitForVisibilityOfElement(CREATE_USERGROUP_FORM);
         inputText(USERGROUP_NAME, usergroup_name);
         clickButton(SAVE_USERGROUP);
         waitForVisibilityOfElement(USERGROUP_CREATED_SUCCESS);
+        waitForInvisibilityOfSuccessPopup();
         return usergroup_name;
     }
     public boolean isUserGroupPageOpen(){
@@ -50,18 +52,19 @@ public class UserGroupPage extends BasePage {
     public void addAnyUserToGroup(String usergroup) {
         try {
             if (!getTextValue(SEARCHED_USERGROUP).contains("usergroup")) {
-               inputText(SEARCH_USER_GROUP, usergroup);
+                inputText(SEARCH_USER_GROUP, usergroup);
+                hitEnterKey(SEARCH_USER_GROUP);
             }
             clickButton(USERGROUP_ACTION_LIST);
             clickButton(EDIT_USERGROUP);
-          //  clickButton(USERGROUP_SEARCHED);
+            //  clickButton(USERGROUP_SEARCHED);
             waitForElementToBePresent(AVAILABLE_EMPLYEES_LIST);
             selectFirstItemFromList(AVAILABLE_EMPLYEES_LIST);
             clickButton(ADD_USER);
             waitForVisibilityOfElement(USERLIST_IN_SELECTED);
             clickButton(SELECTED_EMPLOYEE_BUTTON);
             clickButton(SAVE_USERGROUP);
-           waitForVisibilityOfElement(VERIFY_SUCESS);
+            waitForVisibilityOfElement(VERIFY_SUCESS);
         } catch (Exception e) {
             test.log(LogStatus.FAIL,"Failed at add user");
             test.log(LogStatus.INFO, "Snapshot Below: " + test.addScreenCapture(addScreenshot()));
@@ -70,16 +73,22 @@ public class UserGroupPage extends BasePage {
     public boolean isUserPresentInGroup(String group) {
         boolean isPresent = false;
         try {
-            if (isUserGroupCreated(group)) {
+            if(isUserGroupCreated(group)) {
                 clickButton(INFO_USERGROUP);
             }
             clickButton(MEMBERS_TAB);
             waitAndClick(USER_EXPAND);
-           // clickButton(USER_EXPAND);
-           while(!isElementDisplayed(USERLIST_IN_GROUP)){
+            // clickButton(USER_EXPAND);
+            int counter = 1;
+            while(!isElementPresent(USERLIST_IN_GROUP)){
                 clickButton(DETAILS_TAB);
+                wait(1);
+                counter++;
                 clickButton(MEMBERS_TAB);
-           }
+                if(counter==5){
+                    break;
+                }
+            }
             if(getListSize(USERLIST_IN_GROUP) > 0){
                 isPresent = true;
                 test.log(LogStatus.PASS, "User found", "User" + " " + "present in user group");
@@ -87,7 +96,7 @@ public class UserGroupPage extends BasePage {
             }
         }catch(Exception e){
             test.log(LogStatus.INFO, "Snapshot Below: " + test.addScreenCapture(addScreenshot()));
-            test.log(LogStatus.FAIL, "User not found", "User" + " " + "not present in user group");
+            test.log(LogStatus.FAIL, "User not found after waiting 5 seconds", "User" + " " + "not present in user group");
         }
         return isPresent;
     }
